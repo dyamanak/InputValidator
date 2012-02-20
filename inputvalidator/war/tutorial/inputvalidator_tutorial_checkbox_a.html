@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>チェックボックスに設定する（要素名が異なるパターン）</title>
+<link type="text/css" rel="stylesheet" href="../SyntaxHighlighter.css" />
+<script type="text/javascript" src="../shCore.js"></script>
+<script type="text/javascript" src="../shBrushXml.js"></script>
+<script type="text/javascript" src="../shBrushJScript.js"></script>
+<script type="text/javascript">
+window.onload = function(){dp.SyntaxHighlighter.HighlightAll('code');}
+</script>
+<link type="text/css" rel="stylesheet" href="../common.css" />
+<script type="text/javascript" src="../inputvalidator.js"></script>
+<script type="text/javascript" src="../inputvalidator-rule.js"></script>
+<script type="text/javascript">
+InputValidator.configure = {
+	form1 : {
+		hobby1 : {
+			group : [ 'hobby1', 'hobby2', 'hobby3', 'hobby4', 'hobby5' ],
+			minchecked : 2,
+			maxchecked : 3,
+			error : '趣味を2～3つ選択してください。'
+		}
+	}
+};
+</script>
+</head>
+<body>
+
+<div class="pankuzu">
+<a href="../index.html">トップページ</a>
+／
+チェックボックスに設定する（要素名が異なるパターン）
+</div>
+
+<div class="sourceCode">
+
+<h3>動作サンプル</h3>
+
+<div class="contentsBody">
+
+<form name="form1" method="post" action="">
+趣味
+<input type="checkbox" id="hobby1" name="hobby1" value="1" /><label for="hobby1">音楽</label>
+<input type="checkbox" id="hobby2" name="hobby2" value="1" /><label for="hobby2">映画</label>
+<input type="checkbox" id="hobby3" name="hobby3" value="1" /><label for="hobby3">ダンス</label>
+<input type="checkbox" id="hobby4" name="hobby4" value="1" /><label for="hobby4">料理</label>
+<input type="checkbox" id="hobby5" name="hobby5" value="1" /><label for="hobby5">スポーツ</label>
+<br />
+<br />
+<input type="reset" value="リセット" />&nbsp;&nbsp;
+<input type="submit" value="送信" /><br />
+<br />
+</form>
+
+</div>
+
+</div>
+
+<br />
+
+<div class="sourceCode">
+
+<h3>ソースコード</h3>
+
+<br />
+
+<!--javascript source-->
+<h4>HEAD部（スクリプト宣言）</h4>
+<textarea name="code" class="javascript">
+&lt;script type="text/javascript" src="../inputvalidator.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="../inputvalidator-rule.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+InputValidator.configure = {
+	form1 : {
+		hobby1 : {
+			group : [ 'hobby1', 'hobby2', 'hobby3', 'hobby4', 'hobby5' ],
+			minchecked : 2,
+			maxchecked : 3,
+			error : '趣味を2～3つ選択してください。'
+		}
+	}
+};
+&lt;/script&gt;
+</textarea>
+
+<!--/javascript source-->
+
+<br />
+
+<!--html source-->
+
+<h4>BODY部（HTMLソース）</h4>
+<textarea name="code" class="xhtml">
+&lt;form name="form1" method="post" action=""&gt;
+趣味
+&lt;input type="checkbox" id="hobby1" name="hobby1" value="1" /&gt;&lt;label for="hobby1"&gt;音楽&lt;/label&gt;
+&lt;input type="checkbox" id="hobby2" name="hobby2" value="1" /&gt;&lt;label for="hobby2"&gt;映画&lt;/label&gt;
+&lt;input type="checkbox" id="hobby3" name="hobby3" value="1" /&gt;&lt;label for="hobby3"&gt;ダンス&lt;/label&gt;
+&lt;input type="checkbox" id="hobby4" name="hobby4" value="1" /&gt;&lt;label for="hobby4"&gt;料理&lt;/label&gt;
+&lt;input type="checkbox" id="hobby5" name="hobby5" value="1" /&gt;&lt;label for="hobby5"&gt;スポーツ&lt;/label&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;input type="reset" value="リセット" /&gt;&nbsp;&nbsp;
+&lt;input type="submit" value="送信" /&gt;&lt;br /&gt;
+&lt;br /&gt;
+&lt;/form&gt;
+</textarea>
+
+<!--html source-->
+
+</div>
+
+<br />
+
+<input type="button" value="戻る" onclick="history.back();" /><br />
+
+<br />
+
+</body>
+</html>

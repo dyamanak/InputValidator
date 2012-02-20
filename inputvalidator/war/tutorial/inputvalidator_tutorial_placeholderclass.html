@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>ヒントのスタイルを指定する</title>
+<link type="text/css" rel="stylesheet" href="../SyntaxHighlighter.css" />
+<script type="text/javascript" src="../shCore.js"></script>
+<script type="text/javascript" src="../shBrushXml.js"></script>
+<script type="text/javascript" src="../shBrushJScript.js"></script>
+<script type="text/javascript">
+window.onload = function(){dp.SyntaxHighlighter.HighlightAll('code');}
+</script>
+<link type="text/css" rel="stylesheet" href="../common.css" />
+<script type="text/javascript" src="../inputvalidator.js"></script>
+<script type="text/javascript" src="../inputvalidator-rule.js"></script>
+<script type="text/javascript">
+InputValidator.configure = {
+	form1 : {
+		user : {
+			placeholder : '必須入力',
+			required : true,
+			error : 'ユーザIDが入力されていません。'
+		},
+		pass : {
+			placeholder : '必須入力',
+			required : true,
+			error : 'パスワードが入力されていません。',
+			placeholderfor : 'pass_hint'
+		}
+	}
+};
+</script>
+<style>
+.inputPlaceholder {
+	color : #f33;
+	font-size : small;
+	font-weight : bold;
+	padding : 2px;
+}
+</style>
+</head>
+<body>
+
+<div class="pankuzu">
+<a href="../index.html">トップページ</a>
+／
+ヒントのスタイルを指定する
+</div>
+
+<div class="sourceCode">
+
+<h3>動作サンプル</h3>
+
+<div class="contentsBody">
+
+<form name="form1" method="post" action="">
+<table>
+ <tr>
+  <td>ユーザID</td>
+  <td style="width:300px;"><input type="text" name="user" size="20" maxlength="20" /></td>
+ </tr>
+ <tr>
+  <td colspan="2"><br /></td>
+ </tr>
+ <tr>
+  <td>パスワード</td>
+  <td><input type="password" name="pass" size="20" maxlength="20" /><span id="pass_hint"></span></td>
+ </tr>
+</table>
+<br />
+<input type="reset" value="リセット" />&nbsp;&nbsp;
+<input type="submit" value="送信" /><br />
+<br />
+</form>
+
+</div>
+
+</div>
+
+<br />
+
+<div class="sourceCode">
+
+<h3>ソースコード</h3>
+
+<br />
+
+<!--javascript source-->
+
+<h4>HEAD部（スクリプト宣言）</h4>
+
+<textarea name="code" class="javascript">
+&lt;script type="text/javascript" src="../inputvalidator.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="../inputvalidator-rule.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+InputValidator.configure = {
+	form1 : {
+		user : {
+			placeholder : '必須入力',
+			required : true,
+			error : 'ユーザIDが入力されていません。'
+		},
+		pass : {
+			placeholder : '必須入力',
+			required : true,
+			error : 'パスワードが入力されていません。',
+			placeholderfor : 'pass_hint'
+		}
+	}
+};
+&lt;/script&gt;
+&lt;style&gt;
+.inputPlaceholder {
+	color : #f33;
+	font-size : small;
+	font-weight : bold;
+	padding : 2px;
+}
+&lt;/style&gt;
+</textarea>
+
+<!--/javascript source-->
+
+<br />
+
+<!--html source-->
+
+<h4>BODY部（HTMLソース）</h4>
+<textarea name="code" class="xhtml">
+&lt;form name="form1" method="post" action=""&gt;
+&lt;table&gt;
+ &lt;tr&gt;
+  &lt;td&gt;ユーザID&lt;/td&gt;
+  &lt;td style="width:300px;"&gt;&lt;input type="text" name="user" size="20" maxlength="20" /&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+  &lt;td colspan="2"&gt;&lt;br /&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+  &lt;td&gt;パスワード&lt;/td&gt;
+  &lt;td&gt;&lt;input type="password" name="pass" size="20" maxlength="20" /&gt;&lt;span id="pass_hint"&gt;&lt;/span&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+&lt;/table&gt;
+&lt;br /&gt;
+&lt;input type="reset" value="リセット" /&gt;&nbsp;&nbsp;
+&lt;input type="submit" value="送信" /&gt;&lt;br /&gt;
+&lt;br /&gt;
+&lt;/form&gt;
+</textarea>
+
+<!--html source-->
+
+</div>
+
+<br />
+
+<input type="button" value="戻る" onclick="history.back();" /><br />
+
+<br />
+
+</body>
+</html>

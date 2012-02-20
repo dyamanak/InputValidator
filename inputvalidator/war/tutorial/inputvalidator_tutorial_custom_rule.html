@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>独自のチェックルールを追加する</title>
+<link type="text/css" rel="stylesheet" href="../SyntaxHighlighter.css" />
+<script type="text/javascript" src="../shCore.js"></script>
+<script type="text/javascript" src="../shBrushXml.js"></script>
+<script type="text/javascript" src="../shBrushJScript.js"></script>
+<script type="text/javascript">
+	window.onload = function() {
+		dp.SyntaxHighlighter.HighlightAll('code');
+	}
+</script>
+<link type="text/css" rel="stylesheet" href="../common.css" />
+<script type="text/javascript" src="../inputvalidator.js"></script>
+<script type="text/javascript" src="../inputvalidator-rule.js"></script>
+<script type="text/javascript">
+InputValidator.configure = {
+	form1 : {
+		zipcode1 : {
+			placeholder : '必須入力',
+			required : true,
+			zipcode : true,
+			error : '7桁の数字で入力してください。'
+		},
+		pass1 : {
+			placeholder : '必須入力',
+			required : {
+				error : 'パスワードを入力してください。'
+			},
+			minlength : {
+				minlength : 8,
+				error : '8文字以上入力してください。'
+			},
+			maxlength : {
+				minlength : 20,
+				error : '20文字以上入力してください。'
+			},
+			password : {
+				error : '記号、英字の大文字と小文字、数字を含めてください。'
+			}
+		}
+	}
+};
+InputValidator.validationRules.zipcode = function(value, rules) {
+	if (value) {
+		return (/^(\d{7})$/.test(value));
+	} else {
+		return true;
+	}
+};
+InputValidator.validationRules.password = function(value, rules) {
+	var isValid = true;
+	var errorMessage = '';
+	if (new RegExp(
+			'^(?=.{8,20})(?=.*?[0-9]+)(?=.*?[a-z]+)(?=.*?[A-Z]+)(?=.*?[@~!#$%^&`*+;:"'
+					+ "'" + '?/|{}.=_,\\-<>\\(\\)\\[\\]\\\\]+).+$').test(value)) {
+		isValid = true;
+	} else {
+		isValid = false;
+		if (typeof rules == 'object') {
+			errorMessage = rules.error;
+		}
+	}
+	return {
+		isValid : isValid,
+		errorMessage : errorMessage
+	};
+};
+</script>
+</head>
+<body>
+
+	<div class="pankuzu">
+		<a href="../index.html">トップページ</a> ／ 独自のチェックルールを追加する
+	</div>
+
+	<div class="sourceCode">
+
+		<h3>動作サンプル</h3>
+
+		<div class="contentsBody">
+
+<form name="form1" method="post" action="">
+郵便番号1
+<input type="text" name="zipcode1" size="10" maxlength="7" value="" /><br />
+<br />
+パスワード1
+<input type="text" name="pass1" size="20" maxlength="20" value="" /><br />
+<br />
+<input type="reset" value="リセット" />&nbsp;&nbsp;
+<input type="submit" value="送信" /><br />
+<br />
+</form>
+
+		</div>
+
+	</div>
+
+	<br />
+
+	<div class="sourceCode">
+
+		<h3>ソースコード</h3>
+
+		<br />
+
+		<!--javascript source-->
+		<h4>HEAD部（スクリプト宣言）</h4>
+		<textarea name="code" class="javascript">
+&lt;script type="text/javascript" src="../inputvalidator.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="../inputvalidator-rule.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+InputValidator.configure = {
+	form1 : {
+		zipcode1 : {
+			placeholder : '必須入力',
+			required : true,
+			zipcode : true,
+			error : '7桁の数字で入力してください。'
+		},
+		pass1 : {
+			placeholder : '必須入力',
+			required : {
+				error : 'パスワードを入力してください。'
+			},
+			minlength : {
+				minlength : 8,
+				error : '8文字以上入力してください。'
+			},
+			maxlength : {
+				minlength : 20,
+				error : '20文字以上入力してください。'
+			},
+			password : {
+				error : '記号、英字の大文字と小文字、数字を含めてください。'
+			}
+		}
+	}
+};
+InputValidator.validationRules.zipcode = function(value, rules) {
+	if (value) {
+		return (/^(\d{7})$/.test(value));
+	} else {
+		return true;
+	}
+};
+InputValidator.validationRules.password = function(value, rules) {
+	var isValid = true;
+	var errorMessage = '';
+	if (new RegExp(
+			'^(?=.{8,20})(?=.*?[0-9]+)(?=.*?[a-z]+)(?=.*?[A-Z]+)(?=.*?[@~!#$%^&`*+;:"'
+					+ "'" + '?/|{}.=_,\\-<>\\(\\)\\[\\]\\\\]+).+$').test(value)) {
+		isValid = true;
+	} else {
+		isValid = false;
+		if (typeof rules == 'object') {
+			errorMessage = rules.error;
+		}
+	}
+	return {
+		isValid : isValid,
+		errorMessage : errorMessage
+	};
+};
+&lt;/script&gt;
+</textarea>
+
+		<!--/javascript source-->
+
+		<br />
+
+		<!--html source-->
+
+		<h4>BODY部（HTMLソース）</h4>
+		<textarea name="code" class="xhtml">
+&lt;form name="form1" method="post" action=""&gt;
+郵便番号1
+&lt;input type="text" name="zipcode1" size="10" maxlength="7" value="" /&gt;&lt;br /&gt;
+&lt;br /&gt;
+パスワード1
+&lt;input type="text" name="pass1" size="20" maxlength="20" value="" /&gt;&lt;br /&gt;
+&lt;br /&gt;
+&lt;input type="reset" value="リセット" /&gt;&nbsp;&nbsp;
+&lt;input type="submit" value="送信" /&gt;&lt;br /&gt;
+&lt;br /&gt;
+&lt;/form&gt;
+</textarea>
+
+		<!--html source-->
+
+	</div>
+
+	<br />
+
+	<input type="button" value="戻る" onclick="history.back();" />
+	<br />
+
+	<br />
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+h3 {
+	margin: 4px;
+	padding: 2px;
+	font-weight: normal;
+	font-size: 16px;
+	color: #ffffff;
+	background-color: #003366;
+}
+
+h4 {
+	margin: 2px;
+	padding: 2px;
+	font-weight: normal;
+	font-size: 14px;
+}
+
+h5 {
+	margin: 2px;
+	padding: 2px;
+	font-weight: normal;
+}
+
+body {
+	text-align: center;
+	background-color: #eeeeff;
+	color: #000000;
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
+}
+
+table {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.contentsBody {
+	text-align: center;
+	margin: 0;
+	padding: 0;
+}
+
+.contentsBody td {
+	text-align: left;
+	white-space: nowrap;
+}
+
+.sourceCode {
+	text-align: left;
+	margin: 0 20px;
+	padding: 0;
+	border: solid 2px #6666ff;
+}
+
+.pankuzu {
+	text-align: left;
+	margin: 0;
+	padding: 10px 20px;
+	background-color: #ffffff;
+}
+
+#editFlag1 {
+	border: solid 2px #006600;
+	color: #006600;
+	background-color: #ddffdd;
+	font-size: 1em;
+	padding: 1px;
+	font-weight: bold;
+}
+
+#editFlag2 {
+	border: solid 2px #006600;
+	color: #006600;
+	background-color: #ddffdd;
+	font-size: 1em;
+	padding: 1px;
+	font-weight: bold;
+}
+
+.css1 {
+	border: solid 1px #8855ee;
+}
+
+.table1 {
+	border-width: 0 1px 1px 0;
+	border-style: solid;
+	border-color: #ffffff;
+	color: #000000;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+}
+
+.table1 th {
+	border-width: 1px 0 0 1px;
+	border-style: solid;
+	border-color: #ffffff;
+	background-color: #bbbbbb;
+	padding: 2px;
+	font-weight: normal;
+}
+
+.table1 td {
+	border-width: 1px 0 0 1px;
+	border-style: solid;
+	border-color: #ffffff;
+	background-color: #ccccdd;
+	padding: 2px;
+	text-align: left;
+}
+
+.summary {
+	width: 400px;
+	text-align: left;
+	margin: 0 auto;
+	color: red;
+}

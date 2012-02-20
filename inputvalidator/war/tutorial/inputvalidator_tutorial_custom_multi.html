@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>カスタムバリデータを設定する（複数フィールドチェック）</title>
+<link type="text/css" rel="stylesheet" href="../SyntaxHighlighter.css" />
+<script type="text/javascript" src="../shCore.js"></script>
+<script type="text/javascript" src="../shBrushXml.js"></script>
+<script type="text/javascript" src="../shBrushJScript.js"></script>
+<script type="text/javascript">
+window.onload = function(){dp.SyntaxHighlighter.HighlightAll('code');}
+</script>
+<link type="text/css" rel="stylesheet" href="../common.css" />
+<script type="text/javascript" src="../inputvalidator.js"></script>
+<script type="text/javascript" src="../inputvalidator-rule.js"></script>
+<script type="text/javascript">
+InputValidator.configure = {
+	form1 : {
+		sports1 : {
+			required : true,
+			error : '必ず選択してください。'
+		},
+		sports_name : {
+			func : function(value) {
+				var sports_name = this;
+				if (sports_name.form.sports1[0].checked) {
+					if (value == '') {
+						return false;
+					} else {
+						return true;
+					}
+				}
+				return true;
+			},
+			error : '必ず入力してください。'
+		}
+	}
+};
+InputValidator.customEvent = {
+	form1 : {
+		sports1 : {
+			onClick : function() {
+				var sports1 = this;
+				if (sports1.value == 'yes') {
+					sports1.form.sports_name.disabled = false;
+				} else {
+					sports1.form.sports_name.disabled = true;
+				}
+			},
+			onLoad : function() {
+				var sports1 = this;
+				if (sports1[0].checked == true) {
+					sports1[0].form.sports_name.disabled = true;
+				} else {
+					sports1[0].form.sports_name.disabled = false;
+				}
+			}
+		}
+	}
+};
+</script>
+</head>
+<body>
+
+<div class="pankuzu">
+<a href="../index.html">トップページ</a>
+／
+カスタムバリデータを設定する（複数フィールドチェック）
+</div>
+
+<div class="sourceCode">
+
+<h3>動作サンプル</h3>
+
+<div class="contentsBody">
+
+<form name="form1" method="post" action="">
+スポーツをやっている<br />
+<input type="radio" name="sports1" value="yes" />はい
+<input type="radio" name="sports1" value="no" />いいえ
+<br />
+<br />
+「はい」と答えた方は、スポーツの名前をお書きください。<br />
+<input type="text" name="sports_name" size="20" maxlength="50" value="" />
+<br />
+<br />
+<input type="reset" value="リセット" />&nbsp;&nbsp;
+<input type="submit" value="送信" /><br />
+<br />
+</form>
+
+</div>
+
+</div>
+
+<br />
+
+<div class="sourceCode">
+
+<h3>ソースコード</h3>
+
+<br />
+
+<!--javascript source-->
+<h4>HEAD部（スクリプト宣言）</h4>
+<textarea name="code" class="javascript">
+&lt;script type="text/javascript" src="../inputvalidator.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="../inputvalidator-rule.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+InputValidator.configure = {
+	form1 : {
+		sports1 : {
+			required : true,
+			error : '必ず選択してください。'
+		},
+		sports_name : {
+			func : function(value) {
+				var sports_name = this;
+				if (sports_name.form.sports1[0].checked) {
+					if (value == '') {
+						return false;
+					} else {
+						return true;
+					}
+				}
+				return true;
+			},
+			error : '必ず入力してください。'
+		}
+	}
+};
+InputValidator.customEvent = {
+	form1 : {
+		sports1 : {
+			onClick : function() {
+				var sports1 = this;
+				if (sports1.value == 'yes') {
+					sports1.form.sports_name.disabled = false;
+				} else {
+					sports1.form.sports_name.disabled = true;
+				}
+			},
+			onLoad : function() {
+				var sports1 = this;
+				if (sports1[0].checked == true) {
+					sports1[0].form.sports_name.disabled = true;
+				} else {
+					sports1[0].form.sports_name.disabled = false;
+				}
+			}
+		}
+	}
+};
+&lt;/script&gt;
+</textarea>
+
+<!--/javascript source-->
+
+<br />
+
+<!--html source-->
+
+<h4>BODY部（HTMLソース）</h4>
+<textarea name="code" class="xhtml">
+&lt;form name="form1" method="post" action=""&gt;
+スポーツをやっている&lt;br /&gt;
+&lt;input type="radio" name="sports1" value="yes" /&gt;はい
+&lt;input type="radio" name="sports1" value="no" /&gt;いいえ
+&lt;br /&gt;
+&lt;br /&gt;
+「はい」と答えた方は、スポーツの名前をお書きください。&lt;br /&gt;
+&lt;input type="text" name="sports_name" size="20" maxlength="50" value="" /&gt;
+&lt;br /&gt;
+&lt;br /&gt;
+&lt;input type="reset" value="リセット" /&gt;&nbsp;&nbsp;
+&lt;input type="submit" value="送信" /&gt;&lt;br /&gt;
+&lt;br /&gt;
+&lt;/form&gt;
+</textarea>
+
+<!--html source-->
+
+</div>
+
+<br />
+
+<input type="button" value="戻る" onclick="history.back();" /><br />
+
+<br />
+
+</body>
+</html>

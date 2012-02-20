@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>E-Mailチェック</title>
+<link type="text/css" rel="stylesheet" href="../SyntaxHighlighter.css" />
+<script type="text/javascript" src="../shCore.js"></script>
+<script type="text/javascript" src="../shBrushXml.js"></script>
+<script type="text/javascript" src="../shBrushJScript.js"></script>
+<script type="text/javascript">
+window.onload = function(){dp.SyntaxHighlighter.HighlightAll('code');}
+</script>
+<link type="text/css" rel="stylesheet" href="../common.css" />
+<script type="text/javascript" src="../inputvalidator.js"></script>
+<script type="text/javascript" src="../inputvalidator-rule.js"></script>
+<script type="text/javascript">
+InputValidator.configure = {
+	form1 : {
+		email1 : {
+			email : true,
+			error : 'E-Mailアドレスを正しく入力してください。'
+		}
+	}
+};
+</script>
+</head>
+<body>
+
+<div class="pankuzu">
+<a href="../index.html">トップページ</a>
+／
+E-Mailチェック
+</div>
+
+<div class="sourceCode">
+
+<h3>動作サンプル</h3>
+
+<div class="contentsBody">
+
+<form name="form1" method="post" action="">
+E-Mail
+<input type="text" name="email1" size="20" maxlength="50" value="abcde" /><br />
+<br />
+<input type="reset" value="リセット" />&nbsp;&nbsp;
+<input type="submit" value="送信" /><br />
+<br />
+</form>
+
+</div>
+
+</div>
+
+<br />
+
+<div class="sourceCode">
+
+<h3>ソースコード</h3>
+
+<br />
+
+<!--javascript source-->
+
+<h4>HEAD部（スクリプト宣言）</h4>
+<textarea name="code" class="javascript">
+&lt;script type="text/javascript" src="inputvalidator.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="inputvalidator-rule.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+InputValidator.configure = {
+	form1 : {
+		email1 : {
+			email : true,
+			error : 'E-Mailアドレスを正しく入力してください。'
+		}
+	}
+};
+&lt;/script&gt;
+</textarea>
+
+<!--/javascript source-->
+
+<br />
+
+<!--html source-->
+
+<h4>BODY部（HTMLソース）</h4>
+<textarea name="code" class="xhtml">
+&lt;form name="form1" method="post" action=""&gt;
+E-Mail
+&lt;input type="text" name="email1" size="20" maxlength="50" /&gt;&lt;br /&gt;
+&lt;br /&gt;
+&lt;input type="reset" value="リセット" /&gt;&nbsp;&nbsp;
+&lt;input type="submit" value="送信" /&gt;&lt;br /&gt;
+&lt;br /&gt;
+&lt;/form&gt;
+</textarea>
+
+<!--html source-->
+
+</div>
+
+<br />
+
+<input type="button" value="戻る" onclick="history.back();" /><br />
+
+<br />
+
+</body>
+</html>

@@ -1,0 +1,992 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="description" content="inputvalidator">
+<meta name="keywords"
+	content="inputvalidator,validation,Java,JavaScript">
+<title>InputValidator 3.00</title>
+<script type="text/javascript" src="inputvalidator.js"></script>
+<script type="text/javascript">
+	var pageOnLoad = function() {
+		for ( var i = 0, len = document.links.length; i < len; i++) {
+			var linkElement = document.links[i];
+			InputValidator.addEvent(linkElement, "mouseover", function(evt) {
+				InputValidator.getEventElement(evt).style.fontWeight = "bold";
+			});
+			InputValidator
+					.addEvent(
+							linkElement,
+							"mouseout",
+							function(evt) {
+								InputValidator.getEventElement(evt).style.fontWeight = "normal";
+							});
+		}
+	}
+	InputValidator.addEvent(window, "load", pageOnLoad);
+</script>
+<style>
+body {
+	font-family: Arial, 'ＭＳ Ｐゴシック', sans-serif;
+	margin: 0;
+	padding: 0;
+	font-size: 0.9em;
+}
+
+h2,h3 {
+	font-family: 'Courier New', 'ＭＳ Ｐゴシック', sans-serif;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	padding: 0;
+}
+
+p {
+	margin: 5px;
+	padding: 0;
+}
+
+ul {
+	padding-left: 15px;
+}
+
+ol {
+	padding-left: 15px;
+}
+
+li {
+	padding-left: 0px;
+}
+
+dl {
+	margin: 0;
+}
+
+dd {
+	margin-left: 15px;
+}
+
+div.header {
+	margin: 0;
+	padding: 0;
+	background-color: #e6e6ff;
+	clear: both;
+	width: 100%;
+}
+
+div.contents {
+	padding: 0 10px;
+}
+
+div.contents div.topContents {
+	width: 96%;
+	clear: both;
+}
+
+div.contents div.leftContents {
+	float: left;
+	width: 58%;
+}
+
+div.contents div.rightContents {
+	float: right;
+	width: 38%;
+}
+
+div.api_contents div.topContents {
+	width: 96%;
+	clear: both;
+}
+
+div.footer {
+	margin-top: 10px;
+	background-color: #e6e6ff;
+	clear: both;
+	width: 100%;
+}
+
+div.footer p.copyright {
+	padding: 2px 0 2px 6px;
+	margin: 0;
+	font-size: 1em;
+}
+</style>
+</head>
+<body>
+
+	<!-- header -->
+	<div class="header"></div>
+	<!-- /header -->
+
+	<!-- contents -->
+	<div id="contents" class="contents">
+		<h2>InputValidator</h2>
+		<p>InputValidatorとは簡単な設定だけで入力値の妥当性チェックを行う Java 用、または JavaScript
+			用ライブラリです。</p>
+
+		<!-- leftContents -->
+		<div class="leftContents">
+
+			<h3>サンプル</h3>
+
+			<dl>
+				<dd>
+
+					<ol>
+						<li><a href="sample.html">クライアント側（HTML）に入力値の妥当性チェックを追加する</a>
+						</li>
+						<br />
+						<li><a href="/Sample.do">サーバ側(Java)とクライアント側(HTML)に入力値の妥当性チェックを追加する</a>
+						</li>
+					</ol>
+
+				</dd>
+			</dl>
+
+			<br />
+
+			<table border="0">
+				<tr style="vertical-align: top; white-space: nowrap;">
+					<td>
+
+						<h3>ダウンロード</h3>
+
+						<dl>
+							<dd>
+								<a href="download/inputvalidator-3.00-beta23.zip">inputvalidator-3.00-beta23.zip</a>
+								<ul type="circle">
+									<li>for server (JavaSE1.4以上用)
+										<ul>
+											<li>inputvalidatorjava-3.0-beta.jar</li>
+										</ul></li>
+									<li>for client (JavaScript用)
+										<ul>
+											<li>inputvalidator.js</li>
+											<li>inputvalidator-rule.js</li>
+										</ul>
+								</ul>
+							</dd>
+						</dl>
+					</td>
+					<td style="padding-left:10px;">
+
+						<h3>バージョン</h3>
+
+						<dl>
+							<dd>3.00 beta23</dd>
+						</dl> <br />
+
+						<h3>ライセンス</h3>
+
+						<dl>
+							<dd>
+								<a href="license.txt">MIT</a>
+							</dd>
+						</dl>
+					</td>
+					<td style="padding-left:10px;">
+
+						<h3>対応ブラウザ</h3> <img src="img/icon_ie.gif" /> <img
+						src="img/icon_firefox.gif" /> <img src="img/icon_chrome.gif" />
+						<img src="img/icon_safari.gif" /> <img src="img/icon_opera.gif" />
+				</tr>
+			</table>
+
+		</div>
+		<!-- /leftContents -->
+
+		<!-- rightContents -->
+		<div class="rightContents">
+
+			<h3>スクリーンショット</h3>
+
+			<p>
+				<img src="img/screenshot.png" alt="screenshot"
+					style="border: solid 1px #000000;" />
+			</p>
+
+		</div>
+		<!-- /rightContents -->
+
+		<!-- topContents -->
+		<div class="topContents">
+
+			<h3>チュートリアル</h3>
+
+			<dl>
+				<dd>
+
+					<h4>レイアウト設定</h4>
+
+					<table border="0" width="100%">
+						<tr valign="top">
+							<td width="25%">
+								<ol start="1">
+									<li><a
+										href="tutorial/inputvalidator_tutorial_autofocus.html">フォーカスを設定する</a>
+									</li>
+									<li><a
+										href="tutorial/inputvalidator_tutorial_readonly.html">読取専用を設定する</a>
+									</li>
+									<li><a
+										href="tutorial/inputvalidator_tutorial_placeholder.html">入力欄にヒントを表示する</a>
+									</li>
+									<li><a
+										href="tutorial/inputvalidator_tutorial_errorfor.html">エラーの表示場所を指定する</a>
+									</li>
+									<li><a
+										href="tutorial/inputvalidator_tutorial_placeholderfor.html">ヒントの表示場所を指定する</a>
+									</li>
+								</ol>
+							</td>
+							<td width="25%">
+								<ol start="6">
+									<li><a
+										href="tutorial/inputvalidator_tutorial_errorclass.html">エラーのスタイルを指定する</a>
+									</li>
+									<li><a
+										href="tutorial/inputvalidator_tutorial_placeholderclass.html">ヒントのスタイルを指定する</a>
+									</li>
+									<li><a
+										href="tutorial/inputvalidator_tutorial_focusclass.html">フォーカスセルのスタイルを指定する</a>
+									</li>
+									<li><a
+										href="tutorial/inputvalidator_tutorial_invalidclass.html">入力エラーセルのスタイルを指定する</a>
+									</li>
+								</ol>
+							</td>
+							<td width="25%">
+								<ol start="10">
+									<li>設定ミスを検出する
+										<ol type="a">
+											<li><a
+												href="tutorial/inputvalidator_tutorial_miss_b.html">要素名の誤り</a>
+											</li>
+											<li><a
+												href="tutorial/inputvalidator_tutorial_miss_a.html">チェックルールの誤り</a>
+											</li>
+											<li><a
+												href="tutorial/inputvalidator_tutorial_checkbox_d.html">グループ要素名の誤り</a>
+											</li>
+										</ol>
+									</li>
+								</ol>
+							</td>
+						</tr>
+					</table>
+
+					<h4>チェック設定</h4>
+
+					<table border="0" width="100%">
+						<tr valign="top">
+							<td width="25%">
+								<ol start="1">
+									<li><a
+										href="tutorial/inputvalidator_tutorial_required.html">入力必須チェック</a>
+									</li>
+									<li><a
+										href="tutorial/inputvalidator_tutorial_maxlength.html">文字数上限チェック</a>
+									<li><a
+										href="tutorial/inputvalidator_tutorial_minlength.html">文字数範囲チェック</a>
+									</li>
+									<li><a href="tutorial/inputvalidator_tutorial_email.html">E-Mailチェック</a>
+									</li>
+									<li><a href="tutorial/inputvalidator_tutorial_date.html">日付チェック</a>
+									</li>
+									<li><a href="tutorial/inputvalidator_tutorial_number.html">数値チェック</a>
+									</li>
+									<li><a
+										href="tutorial/inputvalidator_tutorial_number_min_max.html">数値範囲チェック</a>
+									</li>
+									<li><a
+										href="tutorial/inputvalidator_tutorial_zenkaku.html">全角文字チェック</a>
+									</li>
+									<li><a
+										href="tutorial/inputvalidator_tutorial_hankaku.html">半角文字チェック</a>
+									</li>
+									<li><a
+										href="tutorial/inputvalidator_tutorial_pattern.html">正規表現チェック</a>
+									</li>
+								</ol>
+							</td>
+							<td width="25%">
+								<ol start="11">
+									<li>ラジオボタンに設定する
+										<ol type="a">
+											<li><a
+												href="tutorial/inputvalidator_tutorial_radio_b.html">要素名が同じパターン</a>
+											</li>
+											<li><a
+												href="tutorial/inputvalidator_tutorial_radio_a.html">要素名が異なるパターン</a>
+											</li>
+										</ol></li>
+									<li>チェックボックスに設定する
+										<ol type="a">
+											<li><a
+												href="tutorial/inputvalidator_tutorial_checkbox_b.html">要素名が同じパターン</a>
+											</li>
+											<li><a
+												href="tutorial/inputvalidator_tutorial_checkbox_a.html">要素名が異なるパターン</a>
+											</li>
+											<li><a
+												href="tutorial/inputvalidator_tutorial_checkbox_c.html">必須選択パターン</a>
+											</li>
+										</ol></li>
+									<li>リストボックスに設定する
+										<ol type="a">
+											<li><a
+												href="tutorial/inputvalidator_tutorial_select_a.html">１つ選択するパターン</a>
+											</li>
+											<li><a
+												href="tutorial/inputvalidator_tutorial_select_b.html">複数選択するパターン</a>
+											</li>
+											<li><a
+												href="tutorial/inputvalidator_tutorial_select_c.html">valueがないパターン</a>
+											</li>
+										</ol>
+									</li>
+								</ol></td>
+							<td width="25%">
+								<ol start="14">
+									<li>カスタムバリデータを設定する
+										<ol type="a">
+											<li><a
+												href="tutorial/inputvalidator_tutorial_custom_rule.html">独自のチェックルールを追加する</a>
+											</li>
+											<li><a
+												href="tutorial/inputvalidator_tutorial_custom_event.html">独自のチェック関数を設定する</a>
+											</li>
+											<li><a
+												href="tutorial/inputvalidator_tutorial_custom_pass2.html">パスワード２重チェック</a>
+											</li>
+											<li><a
+												href="tutorial/inputvalidator_tutorial_custom_multi.html">複数フィールドチェック</a>
+											</li>
+											<li><a
+												href="tutorial/inputvalidator_tutorial_dynamic_set_rules.html">動的にチェックを設定する</a>
+											</li>
+										</ol>
+									</li>
+								</ol>
+							</td>
+						</tr>
+					</table>
+
+					<h4>イベント設定</h4>
+
+					<table border="0" width="100%">
+						<tr valign="top">
+							<td width="25%">
+								<ol start="1">
+									<li><a href="tutorial/inputvalidator_tutorial_onsubmit.html">送信時のイベントを追加する</a>
+									</li>
+									<li><a href="tutorial/inputvalidator_tutorial_onreset.html">リセット時のイベントを追加する</a>
+									</li>
+									<li><a href="tutorial/inputvalidator_tutorial_onchange.html">編集時のイベントを追加する</a>
+									</li>
+									<li><a href="tutorial/inputvalidator_tutorial_oncheck.html">チェック時のイベントを追加する</a>
+									</li>
+								</ol></td>
+							<td width="25%">
+								<ol start="5">
+									<li><a href="tutorial/inputvalidator_tutorial_onload.html">ロード時のイベントを追加する</a>
+									</li>
+									<li><a href="tutorial/inputvalidator_tutorial_onclick.html">クリック時のイベントを追加する</a>
+									</li>
+								</ol></td>
+							<td width="25%">
+								<ol start="7">
+									<li><a href="tutorial/inputvalidator_tutorial_delay_check_all.html">送信時にまとめてチェックする</a>
+									</li>
+								</ol></td>
+						</tr>
+					</table>
+
+				</dd>
+			</dl>
+
+		</div>
+		<!-- /topContents -->
+
+		<br />
+
+		<!-- api_contents -->
+		<div id="api_contents" class="api_contents">
+
+			<h3>スタイルシート一覧表</h3>
+
+			<table border="1">
+				<tr style="background-color: #e6e6ff;">
+					<td>スタイルシート名</td>
+					<td>種類</td>
+					<td>記述例</td>
+				</tr>
+				<tr>
+					<td>.inputErrorMessage</td>
+					<td><a
+						href="tutorial/inputvalidator_tutorial_errorclass.html">エラーメッセージ<br>スタイル指定</a>
+					</td>
+					<td><pre>
+&lt;style&gt;
+.inputErrorMessage {
+	color : #933;
+	background-color : #FCC;
+	font-weight : bold;
+	padding : 2px;
+	border : solid 1px #933;
+}
+&lt;/style&gt;
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>.inputPlaceholder</td>
+					<td><a
+						href="tutorial/inputvalidator_tutorial_placeholderclass.html">ヒントメッセージ<br>スタイル指定</a>
+					</td>
+					<td><pre>
+&lt;style&gt;
+.inputPlaceholder {
+	color : #f33;
+	font-size : small;
+	font-weight : bold;
+	padding : 2px;
+}
+&lt;/style&gt;
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>.inputFocus</td>
+					<td><a
+						href="tutorial/inputvalidator_tutorial_focusclass.html">フォーカスセル<br>スタイル指定</a>
+					</td>
+					<td><pre>
+&lt;style&gt;
+.inputFocus {
+	color : #ffffff;
+	background-color : #006699;
+	border : solid 2px #fffff0;
+}
+&lt;/style&gt;
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>.inputError</td>
+					<td><a
+						href="tutorial/inputvalidator_tutorial_invalidclass.html">入力エラーセル<br>スタイル指定</a>
+					</td>
+					<td><pre>
+&lt;style&gt;
+.inputError {
+	color : #ffeeee;
+	background-color : #990000;
+	border : solid 2px #ffdddd
+}
+&lt;/style&gt;
+</pre>
+					</td>
+				</tr>
+			</table>
+
+			<br>
+
+			<h3>チェックルール一覧表(InputValidator.configure)</h3>
+
+			<table border="1">
+				<tr style="background-color: #e6e6ff;">
+					<td>チェックルール</td>
+					<td>種類</td>
+					<td>記述例</td>
+				</tr>
+				<tr>
+					<td>autofocus</td>
+					<td><a href="tutorial/inputvalidator_tutorial_autofocus.html">フォーカス設定</a>
+					</td>
+					<td><pre>
+item1 : {
+	autofocus : true
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>readonly</td>
+					<td><a href="tutorial/inputvalidator_tutorial_readonly.html">読取専用設定</a>
+					</td>
+					<td><pre>
+item1 : {
+	readonly : true
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>placeholder</td>
+					<td><a
+						href="tutorial/inputvalidator_tutorial_placeholder.html">ヒント表示</a>
+					</td>
+					<td><pre>
+item1 : {
+	placeholder : '必須入力'
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>errorfor</td>
+					<td><a
+						href="tutorial/inputvalidator_tutorial_errorfor.html">エラー表示場所指定</a>
+					</td>
+					<td><pre>
+item1 : {
+	errorfor : 'エラーを表示する要素のID'
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>placeholderfor</td>
+					<td><a
+						href="tutorial/inputvalidator_tutorial_placeholderfor.html">ヒント表示場所指定</a>
+					</td>
+					<td><pre>
+item1 : {
+	placeholderfor : 'ヒントを表示する要素のID'
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>required</td>
+					<td><a href="tutorial/inputvalidator_tutorial_required.html">必須チェック</a>
+					</td>
+					<td><pre>
+item1 : {
+	required : true,
+	error : '必ず設定してください。'
+},
+item2 : {
+	required : {
+		error : '必ず設定してください。'
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>maxlength</td>
+					<td><a href="tutorial/inputvalidator_tutorial_maxlength.html">文字数上限チェック</a>
+					</td>
+					<td><pre>
+item1 : {
+	maxlength : 10,
+	error : '10文字以内で入力してください。'
+},
+item2 : {
+	maxlength : {
+		error : '10文字以内で入力してください。'
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>minlength</td>
+					<td><a href="tutorial/inputvalidator_tutorial_minlength.html">文字数下限チェック</a>
+					</td>
+					<td><pre>
+item1 : {
+	minlength : 10,
+	error : '10文字以上で入力してください。'
+},
+item2 : {
+	minlength : {
+		error : '10文字以上で入力してください。'
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>email</td>
+					<td><a href="tutorial/inputvalidator_tutorial_email.html">E-Mailチェック</a>
+					</td>
+					<td><pre>
+item1 : {
+	email : true,
+	error : 'E-Mailアドレスを正しく入力してください。'
+},
+item2 : {
+	email : {
+		error : 'E-Mailアドレスを正しく入力してください。'
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>date</td>
+					<td><a href="tutorial/inputvalidator_tutorial_date.html">日付チェック</a>
+					</td>
+					<td><pre>
+date1 : {
+	date : {
+		format : 'yyyy/MM/dd'
+	},
+	error : '日付を入力してください。'
+},
+date2 : {
+	date : {
+		format : 'yyyy-M-d'
+	},
+	error : '日付を入力してください。'
+},
+date3 : {
+	date : {
+		format : 'yyMMdd'
+	},
+	error : '日付を入力してください。'
+},
+date4 : {
+	date : {
+		format : 'MMdd'
+	},
+	error : '日付を入力してください。'
+},
+date5 : {
+	date : {
+		format : 'yyyy年M月d日'
+	},
+	error : '日付を入力してください。'
+},
+date6 : {
+	date : {
+		format : 'yyyy/MM/dd',
+		error : '日付を入力してください。'
+	}
+},
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>number</td>
+					<td><a href="">数値チェック</a></td>
+					<td><pre>
+item1 : {
+	number : true,
+	error : '数値を入力してください。'
+},
+item2 : {
+	number : {
+		error : '数値を入力してください。'
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>max</td>
+					<td><a
+						href="tutorial/inputvalidator_tutorial_number_min_max.html">数値上限チェック</a>
+					</td>
+					<td><pre>
+item1 : {
+	max : 1000,
+	error : '1000以下の数値を入力してください。'
+},
+item2 : {
+	max : {
+		error : '1000以下の数値を入力してください。'
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>min</td>
+					<td><a
+						href="tutorial/inputvalidator_tutorial_number_min_max.html">数値下限チェック</a>
+					</td>
+					<td><pre>
+item1 : {
+	min : 100,
+	error : '100以上の数値を入力してください。'
+},
+item2 : {
+	min : {
+		error : '100以上の数値を入力してください。'
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>zenkaku</td>
+					<td><a href="tutorial/inputvalidator_tutorial_zenkaku.html">全角文字チェック</a>
+					</td>
+					<td><pre>
+item1 : {
+	zenkaku : true,
+	error : '全角文字で入力してください。'
+},
+item2 : {
+	zenkaku : {
+		error : '全角文字で入力してください。'
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>hankaku</td>
+					<td><a href="tutorial/inputvalidator_tutorial_hankaku.html">半角文字チェック</a>
+					</td>
+					<td><pre>
+item1 : {
+	hankaku : true,
+	error : '半角文字で入力してください。'
+},
+item2 : {
+	hankaku : {
+		error : '半角文字で入力してください。'
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>pattern</td>
+					<td><a href="tutorial/inputvalidator_tutorial_pattern.html">正規表現チェック</a>
+					</td>
+					<td><pre>
+item1 : {
+	pattern : /^\d{3}\-\d{4}$/,
+	error : '999-9999のフォーマットで入力してください。'
+},
+item2 : {
+	pattern : '^\\d{3}\\-\\d{4}$',
+	error : '999-9999のフォーマットで入力してください。'
+},
+item3 : {
+	pattern : new RegExp("^\\d{3}\\-\\d{4}$"),
+	error : '999-9999のフォーマットで入力してください。'
+},
+item4 : {
+	pattern : {
+		pattern : /^\d{3}\-\d{4}$/,
+		error : '999-9999のフォーマットで入力してください。'
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>maxchecked</td>
+					<td><a href="tutorial/inputvalidator_tutorial_checkbox_b.html">選択数上限チェック</a>
+					</td>
+					<td><pre>
+item1 : {
+	maxchecked : 3,
+	error : '3つ以内で選択してください。'
+},
+item2 : {
+	maxchecked : {
+		maxchecked : 3,
+		error : '3つ以内で選択してください。'
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>minchecked</td>
+					<td><a href="tutorial/inputvalidator_tutorial_checkbox_b.html">選択数下限チェック</a>
+					</td>
+					<td><pre>
+item1 : {
+	minchecked : 2,
+	error : '2つ以上選択してください。'
+},
+item2 : {
+	minchecked : {
+		minchecked : 2,
+		error : '2つ以上選択してください。'
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>group</td>
+					<td><a href="tutorial/inputvalidator_tutorial_checkbox_c.html">グループ指定</a>
+					</td>
+					<td><pre>
+item1 : {
+	group : [ 'item1', 'item2', 'item3', 'item4', 'item5' ],
+	required : true,
+	error : '趣味を1つ以上選択してください。'
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>func</td>
+					<td><a
+						href="tutorial/inputvalidator_tutorial_custom_yubin.html">独自の関数チェック</a>
+					</td>
+					<td><pre>
+item1 : {
+	func : 'isValidZipCode',
+	error : '7桁の数字で入力してください。'
+},
+item2 : {
+	func : function(value) {
+		if (value) {
+			return (/^(\d{7})$/.test(value));
+		} else {
+			return true;
+		}
+	},
+	error : '7桁の数字で入力してください。'
+},
+item3 : {
+	func : [
+		{
+			func : function(value) {
+				return value != '';
+			},
+			error : '必ず入力してください。'
+		},
+		{
+			func : function(value) {
+				return (/^(\d{7})$/.test(value));
+			},
+			error : '7桁の数字で入力してください。'
+		}
+	]
+}
+</pre>
+					</td>
+				</tr>
+			</table>
+
+		</div>
+		<!-- /api_contents -->
+
+
+		<br />
+
+		<!-- event_contents -->
+		<div id="event_contents" class="event_contents">
+
+			<h3>カスタムイベント一覧表(InputValidator.customEvent)</h3>
+
+			<table border="1">
+				<tr style="background-color: #e6e6ff;">
+					<td>イベント</td>
+					<td>種類</td>
+					<td>記述例</td>
+				</tr>
+				<tr>
+					<td>onSubmit</td>
+					<td><a href="tutorial/inputvalidator_tutorial_onsubmit.html">Submitイベント</a></td>
+					<td><pre>
+onSubmit : function(evt, elements) {
+	var errorCount = elements.length;
+	if (errorCount > 0) {
+		alert(errorCount + '件の入力エラーがあるため、登録できません。');
+		return false;
+	} else {
+		if (confirm('入力内容を登録します。よろしいですか？')) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>onReset</td>
+					<td><a href="tutorial/inputvalidator_tutorial_onreset.html">Resetイベント</a></td>
+					<td><pre>
+onReset : function(evt) {
+	if (confirm('入力内容を元に戻します。よろしいですか？')) {
+		return true;
+	} else {
+		return false;
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>onChange</td>
+					<td><a href="tutorial/inputvalidator_tutorial_onchange.html">Changeイベント</a></td>
+					<td><pre>
+onChange : function(evt) {
+	document.getElementById("editFlag1").innerHTML = "編集中";
+},
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>onCheck</td>
+					<td><a href="tutorial/inputvalidator_tutorial_oncheck.html">Checkイベント</a></td>
+					<td><pre>
+onCheck : function(elements) {
+	var errorCount = elements.length;
+	if (errorCount > 0) {
+		alert(errorCount + "件の入力エラーがあります。");
+	} else {
+		alert("入力エラーはありません。");
+	}
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>onLoad</td>
+					<td><a href="tutorial/inputvalidator_tutorial_onload.html">Loadイベント</a></td>
+					<td><pre>
+onLoad : function() {
+	alert('画面の初期処理があれば、ここに書きます。');
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>onClick</td>
+					<td><a href="tutorial/inputvalidator_tutorial_onclick.html">Clickイベント</a></td>
+					<td><pre>
+onClick : function(evt) {
+	var element = this;
+	alert(element.name + '=' + element.value);
+}
+</pre>
+					</td>
+				</tr>
+			</table>
+
+		</div>
+		<!-- /event_contents -->
+
+	</div>
+	<!-- /contents -->
+
+	<!-- footer -->
+	<div class="footer">
+		<p class="copyright">
+			Copyright(C)
+			<script type="text/javascript">
+				document.write((new Date()).getFullYear());
+			</script>
+			<a href="http://www.bi3d.com/">Daisuke Yamanaka</a> All Rights
+			Reserved.
+		</p>
+	</div>
+	<!-- /footer -->
+</body>
+</html>

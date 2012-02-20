@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>編集時のイベントを追加する</title>
+<link type="text/css" rel="stylesheet" href="../SyntaxHighlighter.css" />
+<script type="text/javascript" src="../shCore.js"></script>
+<script type="text/javascript" src="../shBrushXml.js"></script>
+<script type="text/javascript" src="../shBrushJScript.js"></script>
+<script type="text/javascript">
+window.onload = function(){dp.SyntaxHighlighter.HighlightAll('code');}
+</script>
+<link type="text/css" rel="stylesheet" href="../common.css" />
+<script type="text/javascript" src="../inputvalidator.js"></script>
+<script type="text/javascript" src="../inputvalidator-rule.js"></script>
+<script type="text/javascript">
+InputValidator.configure = {
+	form1 : {
+		name : {
+			required : true,
+			error : '氏名が入力されていません。'
+		}
+	}
+};
+InputValidator.customEvent = {
+	form1 : {
+		onChange : function(evt) {
+			document.getElementById("editFlag1").innerHTML = "編集中";
+		},
+		onReset : function(evt) {
+			document.getElementById("editFlag1").innerHTML = "未編集";
+			return true;
+		}
+	}
+};
+</script>
+</head>
+<body>
+
+<div class="pankuzu">
+<a href="../index.html">トップページ</a>
+／
+編集時のイベントを追加する
+</div>
+
+<div class="sourceCode">
+
+<h3>動作サンプル</h3>
+
+<div class="contentsBody">
+
+<h2><span id="editFlag1">未編集</span></h2>
+<form name="form1" method="post" action="">
+<table border="0">
+ <tr>
+  <td>氏名</td>
+  <td><input type="text" name="name" size="20" maxlength="20" /></td>
+ </tr>
+ <tr>
+  <td>ふりがな</td>
+  <td><input type="text" name="kana" size="20" maxlength="20" /></td>
+ </tr>
+ <tr>
+  <td>ハンドルネーム</td>
+  <td><input type="text" name="handleName" size="20" maxlength="20" /></td>
+ </tr>
+</table>
+<br />
+<input type="reset" value="リセット" />&nbsp;&nbsp;
+<input type="submit" value="送信" /><br />
+<br />
+</form>
+
+</div>
+
+</div>
+
+<br />
+
+<div class="sourceCode">
+
+<h3>ソースコード</h3>
+
+<br />
+
+<!--javascript source-->
+<h4>HEAD部（スクリプト宣言）</h4>
+<textarea name="code" class="javascript">
+&lt;script type="text/javascript" src="../inputvalidator.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="../inputvalidator-rule.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+InputValidator.configure = {
+	form1 : {
+		name : {
+			required : true,
+			error : '氏名が入力されていません。'
+		}
+	}
+};
+InputValidator.customEvent = {
+	form1 : {
+		onChange : function(evt) {
+			document.getElementById("editFlag1").innerHTML = "編集中";
+		},
+		onReset : function(evt) {
+			document.getElementById("editFlag1").innerHTML = "未編集";
+			return true;
+		}
+	}
+};
+&lt;/script&gt;
+</textarea>
+
+<!--/javascript source-->
+
+<br />
+
+<!--html source-->
+
+<h4>BODY部（HTMLソース）</h4>
+<textarea name="code" class="xhtml">
+&lt;h2&gt;&lt;span id="editFlag1"&gt;未編集&lt;/span&gt;&lt;/h2&gt;
+&lt;form name="form1" method="post" action=""&gt;
+&lt;table border="0"&gt;
+ &lt;tr&gt;
+  &lt;td&gt;氏名&lt;/td&gt;
+  &lt;td&gt;&lt;input type="text" name="name" size="20" maxlength="20" /&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+  &lt;td&gt;ふりがな&lt;/td&gt;
+  &lt;td&gt;&lt;input type="text" name="kana" size="20" maxlength="20" /&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+  &lt;td&gt;ハンドルネーム&lt;/td&gt;
+  &lt;td&gt;&lt;input type="text" name="handleName" size="20" maxlength="20" /&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+&lt;/table&gt;
+&lt;br /&gt;
+&lt;input type="reset" value="リセット" /&gt;&nbsp;&nbsp;
+&lt;input type="submit" value="送信" /&gt;&lt;br /&gt;
+&lt;br /&gt;
+&lt;/form&gt;
+</textarea>
+
+<!--html source-->
+
+</div>
+
+<br />
+
+<input type="button" value="戻る" onclick="history.back();" /><br />
+
+<br />
+
+</body>
+</html>

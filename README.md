@@ -1,7 +1,7 @@
 ## Input Validator 3.00
 
 InputValidatorとは簡単な設定だけで
-入力値の妥当性チェックを行う Java 用、または JavaScript 用ライブラリです。
+入力値の妥当性チェックを行う __Java__ 用、または __JavaScript__ 用ライブラリです。
 
 ### サンプル & チュートリアル
 

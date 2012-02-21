@@ -1,13 +1,13 @@
-## Input Validator
+## Input Validator 3.00
 
 InputValidatorとは簡単な設定だけで
 入力値の妥当性チェックを行う Java 用、または JavaScript 用ライブラリです。
 
-### Demo & Tutorial
+### サンプル & チュートリアル
 
- [Input Validator 3.00 Demo][1]
+ [Input Validator 3.00 Demo Site][1]
 
-### Sample Code (for JavaScript)
+### 使い方の例 (HTML & JavaScript)
 
 以下のサンプルコードでは、各入力欄が必須であることを設定しています。
 
@@ -47,14 +47,37 @@ InputValidatorとは簡単な設定だけで
 	</body>
 	</html>
 
-###Browser Support
+### 対応ブラウザ
 
  InternetExplorer / Firefox / Chrome / Safari / Opera
 
-### License
+### ライセンス
 
-[MIT-style license.][2]
+ [MIT-style license.][2]
+
+### メリット
+
+このライブラリを使うと、一つの「チェック仕様定義ファイル（JSON形式）」を読み込んで、
+クライアント側（JavaScript）とサーバ側（Java）で入力値の妥当性を検証できます。
+
+何が目新しいかと言いますと、
+「クライアント側のユーザビリティ向上と同時に、サーバ側のセキュリティ（妥当性検証）も確保される」
+ということなんです。
+
+InputValidator は容易に拡張でき、必要に応じて案件ごとにチェック仕様をカスタマイズできます。
+チェック仕様を JavaScript で記述できるので、要望に応じて柔軟な対応が可能です。
+
+### ご意見・ご要望
+
+ [ご意見・ご要望はこちら][4]
+
+### 更新履歴 & 残課題
+
+ [更新履歴 & 残課題][3]
+
+###
 
  [1]: http://inputvalidator.appspot.com/
  [2]: http://inputvalidator.appspot.com/license.txt
-
+ [3]: http://inputvalidator.appspot.com/changes.txt
+ [4]: https://github.com/dyamanak/InputValidator/issues

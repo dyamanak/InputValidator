@@ -97,16 +97,13 @@ InputValidator.customEvent = {
 					return false;
 				}
 			} else {
+				alert('入力エラーが ' + errorCount + ' 件あります。');
 				return false;
 			}
 		},
 		onReset : function(evt) {
-			if (confirm('入力内容をリセットします。よろしいですか？')) {
-				document.getElementById('editFlag1').innerHTML = '未編集';
-				return true;
-			} else {
-				return false;
-			}
+			document.getElementById('editFlag1').innerHTML = '未編集';
+			return true;
 		},
 		onChange : function() {
 			document.getElementById('editFlag1').innerHTML = '編集中';

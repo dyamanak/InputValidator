@@ -51,13 +51,14 @@
 ■残課題
 
 （仕様）
+・エラー要素を指定された場合に、エラー要素がクリックされたら、入力欄にフォーカスをあてる
 ・キー押下時のリアルタイムチェック機能をつける
 ・onInputイベント追加？
 ・onUnchangeイベント追加？
 ・エラーを右側。エラーを右上に変更できるようにする？
 ・onXXXのonをとる？
-・onSubmit -> onsubmit, onClick = onclick どちらでも動くようにする？
 ・不正なカスタムイベント（onXXX）を検出する？
+・onSubmit -> onsubmit, onClick = onclick どちらでも動くようにする？
 ・onXXXイベントの引数に、elementを追加する？
 ・HTML5のValidatorが使える状態のときは、それを使うようにする？
 ・TEXTAREAのリサイズイベントを取得して、再描画する。
@@ -79,8 +80,9 @@
 ・ショートカットまたはメニューを上部か左部に表示する。
 ・HTML5のチュートリアルを作成する。
  ・HTML5の新要素対応（input type=search,tel,url,email,datetime,date,month,week,time,datetime-local,number,range,color）
+・Ajaxを使った妥当性検証サンプルを作る。
 
 （試験改善）
-・単体試験ツールの導入。
+・単体試験ツールの導入。(SeleniumRC)
 ・パフォーマンス検証。
- →サーバ処理が少し重いかも・・・。キャッシュを利用して2回目以降は高速に処理されるようにする
+ →サーバ処理ではキャッシュを利用して2回目以降は高速に処理されるようにする

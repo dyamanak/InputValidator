@@ -5,7 +5,7 @@ InputValidatorとは簡単な設定だけで
 
 ### サンプル & チュートリアル
 
- [Input Validator 3.00 Demo Site][1]
+ [Input Validator 3.00 Demo][1]
 
 ### 使い方の例 (HTML & JavaScript)
 
@@ -57,8 +57,15 @@ InputValidatorとは簡単な設定だけで
 
 ### メリット
 
-このライブラリを使うと、一つの「チェック仕様定義ファイル（JSON形式）」を読み込んで、
+本ライブラリは、単純にクライアント側（JavaScript）だけの入力値妥当性検証としても利用できます。
+
+ [サンプル１][5]
+
+さらに、一歩進んだ使い方をすることができます。
+それは、一つの「チェック仕様定義ファイル（JSON形式）」を読み込んで、
 クライアント側（JavaScript）とサーバ側（Java）で入力値の妥当性を検証できます。
+
+ [サンプル２][6]
 
 何が目新しいかと言いますと、
 「クライアント側のユーザビリティ向上と同時に、サーバ側のセキュリティ（妥当性検証）も確保される」
@@ -81,3 +88,5 @@ InputValidator は容易に拡張でき、必要に応じて案件ごとにチ�
  [2]: http://inputvalidator.appspot.com/license.txt
  [3]: http://inputvalidator.appspot.com/changes.txt
  [4]: https://github.com/dyamanak/InputValidator/issues
+ [5]: http://inputvalidator.appspot.com/sample.html
+ [6]: http://inputvalidator.appspot.com/Sample.do

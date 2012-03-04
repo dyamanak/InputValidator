@@ -29,6 +29,9 @@ InputValidator.validationRules = {
 	placeholderclass : function(value, rules) {
 		return true;
 	},
+	oninput : function(value, rules) {
+		return true;
+	},
 	required : function(value, rules) {
 		// 入力必須チェック
 		var isValid = true;

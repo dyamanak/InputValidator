@@ -19,8 +19,8 @@ var InputValidator = {
 	styleSheet : null, // スタイルシート
 	currentActiveElement : null, // 現在アクティブな要素
 	previousActiveElement : null, // 前回アクティブな要素
-	isDisplayError : true, // 入力欄エラーメッセージ表示フラグ(true:表示,false:非表示)
-	isCheckChanged : true, // 入力値の変更時の即時チェックフラグ(true:する,false:しない)
+	isCheckOnChange : true, // 入力値の変更時の即時チェックフラグ(true:する,false:しない)
+	isCheckOnInput : false, // 入力中の即時チェックフラグ(true:する,false:しない)
 	position : (navigator.userAgent.indexOf('MSIE 6.0') >= 0) ? 'inner'
 			: 'down', // メッセージ表示位置(inner:内部, up:上, down:下)
 	css : {
@@ -29,7 +29,7 @@ var InputValidator = {
 		errorClass : 'inputError',
 		errorCssText : 'background-color:#fdd;',
 		placeholderClass : 'inputPlaceholder',
-		placeholderCssText : 'color:#888;padding:1px;white-space:nowrap;font-size:small;',
+		placeholderCssText : 'color:#888;padding:1px;white-space:nowrap;font-size:small;padding-left:4px;padding-top:2px;',
 		errorMessageClass : 'inputErrorMessage',
 		errorMessageCssText : 'color:#000;background-color:#ffe;border:solid 1px #886;padding:2px;white-space:nowrap;font-size:small;',
 		readonlyClass : 'inputReadonly',
@@ -74,6 +74,7 @@ var InputValidator = {
 	},
 
 	hasStyleRule : function(selector) {
+		// console.log('hasStyleRule()');
 		var hasStyleRule = false;
 		var styleSheets = document.styleSheets;
 		for ( var i = 0, ilen = styleSheets.length; i < ilen; i++) {
@@ -95,6 +96,7 @@ var InputValidator = {
 	},
 
 	createStyleSheet : function() {
+		// console.log('createStyleSheet()');
 		var sheet;
 		if (InputValidator.UserAgent.MSIE) {
 			sheet = document.createStyleSheet();
@@ -111,6 +113,7 @@ var InputValidator = {
 	},
 
 	addStyleRule : function(selector, declaration) {
+		// console.log('addStyleRule()');
 		var sheet = InputValidator.styleSheet;
 		if (!sheet) {
 			sheet = InputValidator.createStyleSheet();
@@ -129,13 +132,6 @@ var InputValidator = {
 
 		// disable resize event
 		InputValidator.disabledResize = true;
-
-		if (InputValidator.customEvent) {
-			// customEventに入力欄エラーメッセージ表示フラグが設定されていたら適用する
-			if (InputValidator.customEvent.isDisplayError != undefined) {
-				this.isDisplayError = InputValidator.customEvent.isDisplayError;
-			}
-		}
 
 		// InputValidator用のスタイルシートを追加する
 		if (!InputValidator.hasStyleRule('.' + InputValidator.css.focusClass)) {
@@ -300,13 +296,10 @@ var InputValidator = {
 			InputValidator.addEvent(form, 'mouseup', function(evt) {
 				InputValidator._eventHandlerClick.call(InputValidator, evt);
 			});
-			InputValidator.addEvent(form, 'keyup',
-					function(evt) {
-						InputValidator._eventHandlerMouseDown.call(
-								InputValidator, evt);
-						InputValidator._eventHandlerClick.call(InputValidator,
-								evt);
-					});
+			InputValidator.addEvent(form, 'keyup', function(evt) {
+				InputValidator._eventHandlerKeyDown.call(InputValidator, evt);
+				InputValidator._eventHandlerClick.call(InputValidator, evt);
+			});
 			// submit,resetイベントを追加する
 			InputValidator.addEvent(form, 'submit', InputValidator._submitForm);
 			InputValidator.addEvent(form, 'reset', InputValidator._resetForm);
@@ -352,9 +345,49 @@ var InputValidator = {
 		}
 	},
 
-	_eventHandlerMouseDown : function(evt) {
-		console.log('_eventHandlerMouseDown()');
+	_eventHandlerKeyDown : function(evt) {
 		var srcElement = InputValidator.getEventElement(evt);
+		console.log('_eventHandlerKeyDown(' + srcElement.tagName + ','
+				+ srcElement.name + ')');
+		if (srcElement._srcElement) {
+			srcElement = srcElement._srcElement;
+			console.log('_eventHandlerKeyDown(' + srcElement.tagName + ','
+					+ srcElement.name + ')');
+		}
+		var value = InputValidator.getElementValue(srcElement);
+		if (srcElement._realtimePreviousValue != value) {
+			srcElement._realtimePreviousValue = value;
+			if (srcElement._rules
+					&& srcElement._rules.oninput instanceof Function) {
+				srcElement._rules.oninput.call(srcElement, evt);
+			}
+			if (InputValidator.isCheckOnInput) {
+				// Realtime check
+				InputValidator.validateElement(srcElement, true);
+			}
+		}
+		InputValidator._eventHandlerMouseDown.call(InputValidator, evt);
+	},
+
+	_eventHandlerMouseDown : function(evt) {
+		var srcElement = InputValidator.getEventElement(evt);
+		console.log('_eventHandlerMouseDown(' + srcElement.tagName + ','
+				+ srcElement.name + ')');
+		if (srcElement._srcElement) {
+			srcElement = srcElement._srcElement;
+			console.log('_eventHandlerMouseDown(' + srcElement.tagName + ','
+					+ srcElement.name + ')');
+			console.log('_eventHandlerMouseDown canceld.');
+			InputValidator.stopEventBubbling(evt);
+			console.log('_eventHandlerMouseDown delegate mousedown.');
+			setTimeout(function(srcElement) {
+				return function() {
+					srcElement.focus();
+					InputValidator.fireEvent(srcElement, 'mousedown');
+				};
+			}(srcElement), 0);
+			return;
+		}
 		if (InputValidator.currentActiveElement !== srcElement) {
 			if (InputValidator.currentActiveElement
 					&& InputValidator
@@ -378,8 +411,14 @@ var InputValidator = {
 	},
 
 	_eventHandlerClick : function(evt) {
-		console.log('_eventHandlerClick()');
 		var srcElement = InputValidator.getEventElement(evt);
+		console.log('_eventHandlerClick(' + srcElement.tagName + ','
+				+ srcElement.name + ')');
+		if (srcElement._srcElement) {
+			srcElement = srcElement._srcElement;
+			console.log('_eventHandlerClick(' + srcElement.tagName + ','
+					+ srcElement.name + ')');
+		}
 		if (InputValidator.currentActiveElement === srcElement) {
 			if (InputValidator._isLeftClick(evt) || evt.keyCode === 32
 					&& InputValidator._isButtonRadioCheckbox(srcElement)) {
@@ -391,11 +430,15 @@ var InputValidator = {
 							InputValidator.currentActiveElement, evt);
 				}
 			}
+			console.log('-- click --');
+			InputValidator.currentActiveElement = srcElement;
+		} else {
+			console.log('-- not click --');
 		}
 	},
 
 	_isLeftClick : function(evt) {
-		console.log('_isLeftClick()');
+		// console.log('_isLeftClick()');
 		if (InputValidator.UserAgent.MSIE) {
 			return event.button === 1;
 		} else if (InputValidator.UserAgent.AppleWebKit) {
@@ -406,7 +449,7 @@ var InputValidator = {
 	},
 
 	_isButtonRadioCheckbox : function(element) {
-		console.log('_isButtonRadioCheckbox()');
+		// console.log('_isButtonRadioCheckbox()');
 		if ((element.tagName == 'INPUT' && (element.type == 'button'
 				|| element.type == 'radio' || element.type == 'checkbox'))
 				|| element.tagName == 'BUTTON') {
@@ -417,7 +460,7 @@ var InputValidator = {
 	},
 
 	_isInputElement : function(element) {
-		console.log('_isInputElement()');
+		// console.log('_isInputElement()');
 		if ((element.tagName == 'INPUT' && element.type != 'hidden')
 				|| element.tagName == 'BUTTON' || element.tagName == 'SELECT'
 				|| element.tagName == 'TEXTAREA') {
@@ -485,7 +528,7 @@ var InputValidator = {
 		var validatorElements = formElement._validatorElements;
 		var errorElementList = [];
 		var checkValid = function(element) {
-			InputValidator.validateElement(element);
+			InputValidator.validateElement(element, false);
 			if (!element._isValid) {
 				errorElementList.push(element); // 入力エラー要素を保存する
 				if (isValid) {
@@ -532,7 +575,7 @@ var InputValidator = {
 		var validatorElements = formElement._validatorElements;
 		var errorElementList = [];
 		var checkValid = function(element) {
-			InputValidator.validateElement(element);
+			InputValidator.validateElement(element, false);
 			if (!element._isValid) {
 				errorElementList.push(element); // 入力エラー要素を保存する
 				if (isValid) {
@@ -612,6 +655,7 @@ var InputValidator = {
 			srcElement._error = '';
 			srcElement.className = srcElement._defaultClassName;
 			InputValidator.setDefaultValue(srcElement);
+			InputValidator._hideError(srcElement);
 			InputValidator._displayPlaceholder(srcElement, InputValidator
 					.getElementDefaultValue(srcElement), false);
 		}
@@ -722,9 +766,9 @@ var InputValidator = {
 		// 変更前の入力値と比較し、異なっていたら、_changeValueメソッドを呼ぶ
 		InputValidator._checkChangeValue(srcElement);
 
-		if (InputValidator.isCheckChanged) {
+		if (InputValidator.isCheckOnChange) {
 			// 即時チェックする場合、入力値をチェックする
-			InputValidator.validateElement(srcElement);
+			InputValidator.validateElement(srcElement, false);
 		} else {
 			// ヒントを表示する
 			InputValidator._displayPlaceholder(srcElement, InputValidator
@@ -750,34 +794,14 @@ var InputValidator = {
 							ge._checked = false;
 						}
 						ge.className = ge._defaultClassName;
-						InputValidator._hidePlaceholder(ge);
 					}
 				} else {
 					srcElement.className = srcElement._defaultClassName;
-					InputValidator._hidePlaceholder(srcElement);
 				}
 				InputValidator._changeValue(srcElement);
 			} else if (srcElement.type == 'checkbox') {
 				srcElement.className = srcElement._defaultClassName;
-				InputValidator._hidePlaceholder(srcElement);
 				InputValidator._changeValue(srcElement);
-			}
-		}
-		if (InputValidator.customEvent) {
-			var formName = InputValidator._getAttributeValue(srcElement.form,
-					'name');
-			var formCustomEvent = InputValidator.customEvent[formName];
-			if (formCustomEvent) {
-				var srcElementName = InputValidator._getAttributeValue(
-						srcElement, 'name');
-				var srcElementCustomEvent = formCustomEvent[srcElementName];
-				if (srcElementCustomEvent) {
-					if (srcElementCustomEvent.onClick) {
-						if (typeof (srcElementCustomEvent.onClick) == 'function') {
-							srcElementCustomEvent.onClick.call(srcElement, evt);
-						}
-					}
-				}
 			}
 		}
 		return true;
@@ -865,7 +889,7 @@ var InputValidator = {
 		return result;
 	},
 
-	validateElement : function(srcElement) {
+	validateElement : function(srcElement, isOnInput) {
 		console.log('validateElement()');
 		var rules = srcElement._rules;
 		if (!rules) {
@@ -882,21 +906,31 @@ var InputValidator = {
 		if (isValid) {
 			// OK
 			if (value) {
-				// 入力エラーを消す
+				// 入力エラーとヒントを消す
+				InputValidator._hidePlaceholder(srcElement);
 				InputValidator._hideError(srcElement);
-			} else {
-				// 入力メモの表示
-				var displayPlaceholder = function(srcElement) {
-					InputValidator._displayPlaceholder(srcElement,
-							InputValidator.getElementValue(srcElement), false);
-				};
-				if (rules.group) {
-					var ge = InputValidator._getGroupElements(srcElement);
-					for ( var i = 0, len = ge.length; i < len; i++) {
-						displayPlaceholder(ge[i]);
+				// oninputイベントの場合、セルのスタイルを直す
+				if (isOnInput) {
+					if (InputValidator.css.focusClass) {
+						srcElement.className = InputValidator.css.focusClass;
 					}
-				} else {
-					displayPlaceholder(srcElement);
+				}
+			} else {
+				if (!isOnInput) {
+					// onblurイベントならヒントを表示する
+					var displayPlaceholder = function(srcElement) {
+						InputValidator._displayPlaceholder(srcElement,
+								InputValidator.getElementValue(srcElement),
+								false);
+					};
+					if (rules.group) {
+						var ge = InputValidator._getGroupElements(srcElement);
+						for ( var i = 0, len = ge.length; i < len; i++) {
+							displayPlaceholder(ge[i]);
+						}
+					} else {
+						displayPlaceholder(srcElement);
+					}
 				}
 			}
 		} else {
@@ -1004,52 +1038,60 @@ var InputValidator = {
 
 	_displayPlaceholder : function(srcElement, value, isRedraw) {
 		console.log('_displayPlaceholder()');
-		var type = srcElement.type;
-		var tagName = srcElement.tagName;
-		if (tagName == 'BUTTON'
-				|| (tagName == 'INPUT' && (type == 'hidden' || type == 'submit'
-						|| type == 'reset' || type == 'button'))) {
-			return;
-		}
-		InputValidator._hideError(srcElement);
-		if (srcElement._rules && srcElement._rules.placeholderfor) {
-			var displayPlaceholderElement = document
-					.getElementById(srcElement._rules.placeholderfor);
-			if (displayPlaceholderElement) {
-				displayPlaceholderElement.innerHTML = srcElement._rules.placeholder;
-				var displayPlaceholderStyle = displayPlaceholderElement.style;
-				if (InputValidator.css.placeholderClass) {
-					displayPlaceholderElement.className = InputValidator.css.placeholderClass;
-				}
-				var placeholderStyle = displayPlaceholderElement.style;
-				if (!value
-						&& srcElement._rules
-						&& srcElement._rules.placeholder
-						&& (!isRedraw || srcElement !== this.currentActiveElement)) {
-					placeholderStyle.display = '';
-				} else {
-					placeholderStyle.display = 'none';
-				}
+		if (!srcElement._placeholderDisplay) {
+			srcElement._placeholderDisplay = true;
+			var type = srcElement.type;
+			var tagName = srcElement.tagName;
+			if (tagName == 'BUTTON'
+					|| (tagName == 'INPUT' && (type == 'hidden'
+							|| type == 'submit' || type == 'reset' || type == 'button'))) {
+				return;
 			}
-		} else {
-			var placeholderElement = srcElement._placeholderElement;
-			if (!placeholderElement) {
-				placeholderElement = InputValidator
-						._appendPlaceholderElement(srcElement);
-			}
-			if (placeholderElement) {
-				InputValidator._adjustLocationPlaceholder(srcElement);
-				var placeholderStyle = placeholderElement.style;
-				if (!value
-						&& srcElement._rules
-						&& srcElement._rules.placeholder
-						&& (!isRedraw || srcElement !== this.currentActiveElement)) {
-					var textElement = placeholderElement._textElement;
-					var textStyle = textElement.style;
-					textElement.innerHTML = srcElement._rules.placeholder;
-					placeholderStyle.display = '';
-				} else {
-					placeholderStyle.display = 'none';
+			if (srcElement._rules && srcElement._rules.placeholderfor) {
+				var placeholderElement = srcElement._placeholderElement;
+				if (!placeholderElement) {
+					placeholderElement = document
+							.getElementById(srcElement._rules.placeholderfor);
+					if (placeholderElement) {
+						srcElement._placeholderElement = placeholderElement;
+						placeholderElement._srcElement = srcElement;
+					}
+				}
+				if (placeholderElement) {
+					placeholderElement.innerHTML = srcElement._rules.placeholder;
+					var placeholderStyle = placeholderElement.style;
+					if (InputValidator.css.placeholderClass) {
+						placeholderElement.className = InputValidator.css.placeholderClass;
+					}
+					if (!value
+							&& srcElement._rules
+							&& srcElement._rules.placeholder
+							&& (!isRedraw || srcElement !== this.currentActiveElement)) {
+						placeholderStyle.display = '';
+					} else {
+						placeholderStyle.display = 'none';
+					}
+				}
+			} else {
+				var placeholderElement = srcElement._placeholderElement;
+				if (!placeholderElement) {
+					placeholderElement = InputValidator
+							._appendPlaceholderElement(srcElement);
+				}
+				if (placeholderElement) {
+					InputValidator._adjustLocationPlaceholder(srcElement);
+					var placeholderStyle = placeholderElement.style;
+					if (!value
+							&& srcElement._rules
+							&& srcElement._rules.placeholder
+							&& (!isRedraw || srcElement !== this.currentActiveElement)) {
+						var textElement = placeholderElement._textElement;
+						var textStyle = textElement.style;
+						textElement.innerHTML = srcElement._rules.placeholder;
+						placeholderStyle.display = '';
+					} else {
+						placeholderStyle.display = 'none';
+					}
 				}
 			}
 		}
@@ -1057,23 +1099,26 @@ var InputValidator = {
 
 	_hidePlaceholder : function(srcElement) {
 		console.log('_hidePlaceholder()');
-		var hide = function(srcElement) {
-			if (srcElement._rules && srcElement._rules.placeholderfor) {
-				var displayPlaceholderElement = document
-						.getElementById(srcElement._rules.placeholderfor);
-				if (displayPlaceholderElement) {
-					displayPlaceholderElement.style.display = 'none';
-				}
-			} else {
-				var placeholderElement = srcElement._placeholderElement;
-				if (placeholderElement) {
-					placeholderElement.style.display = 'none';
+		if (srcElement._placeholderDisplay) {
+			srcElement._placeholderDisplay = false;
+			var hide = function(srcElement) {
+				if (srcElement._rules && srcElement._rules.placeholderfor) {
+					var displayPlaceholderElement = document
+							.getElementById(srcElement._rules.placeholderfor);
+					if (displayPlaceholderElement) {
+						displayPlaceholderElement.style.display = 'none';
+					}
+				} else {
+					var placeholderElement = srcElement._placeholderElement;
+					if (placeholderElement) {
+						placeholderElement.style.display = 'none';
+					}
 				}
 			}
-		}
-		var ge = InputValidator._getGroupElements(srcElement);
-		for ( var i = 0, len = ge.length; i < len; i++) {
-			hide(ge[i]);
+			var ge = InputValidator._getGroupElements(srcElement);
+			for ( var i = 0, len = ge.length; i < len; i++) {
+				hide(ge[i]);
+			}
 		}
 	},
 
@@ -1088,17 +1133,12 @@ var InputValidator = {
 				._createPlaceholderElement(srcElement);
 
 		// 表示メッセージ要素を追加
-		var textElement = InputValidator
-				._createPlaceholderTextElement(placeholderElement);
+		var textElement = InputValidator._createPlaceholderTextElement(
+				srcElement, placeholderElement);
 		if (srcElement._rules.placeholder) {
 			textElement.innerHTML = srcElement._rules.placeholder;
 		}
 
-		InputValidator.addEvent(placeholderElement, 'click', function(evt) {
-			placeholderElement.style.display = 'none';
-			srcElement.focus();
-			InputValidator.fireEvent(srcElement, 'mousedown');
-		});
 		return placeholderElement;
 	},
 
@@ -1115,17 +1155,19 @@ var InputValidator = {
 		placeholderStyle.display = '';
 		placeholderStyle.zIndex = srcElement.style.zIndex + 1;
 		placeholderStyle.position = 'absolute';
-		placeholderStyle.cursor = 'default';
+		placeholderStyle.cursor = 'text';
 		srcElement.parentNode.appendChild(placeholderElement);
 		srcElement._placeholderElement = placeholderElement;
+		placeholderElement._srcElement = srcElement;
 		return placeholderElement;
 	},
 
-	_createPlaceholderTextElement : function(placeholderElement) {
+	_createPlaceholderTextElement : function(srcElement, placeholderElement) {
 		console.log('_createPlaceholderTextElement()');
 		var textElement = document.createElement('div');
 		placeholderElement.appendChild(textElement);
 		placeholderElement._textElement = textElement;
+		textElement._srcElement = srcElement;
 		return textElement;
 	},
 
@@ -1152,63 +1194,79 @@ var InputValidator = {
 
 	_displayError : function(srcElement) {
 		console.log('_displayError()');
-		var type = srcElement.type;
-		var tagName = srcElement.tagName;
-		if (tagName == 'BUTTON'
-				|| (tagName == 'INPUT' && (type == 'hidden' || type == 'submit'
-						|| type == 'reset' || type == 'button'))) {
-			return;
-		}
-		InputValidator._hidePlaceholder(srcElement);
-		if (srcElement._rules && srcElement._rules.errorfor) {
-			var displayErrorElement = document
-					.getElementById(srcElement._rules.errorfor);
-			if (displayErrorElement) {
-				displayErrorElement.innerHTML = srcElement._error;
-				var displayErrorStyle = displayErrorElement.style;
-				if (InputValidator.css.errorMessageClass) {
-					displayErrorElement.className = InputValidator.css.errorMessageClass;
-				}
-				displayErrorStyle.display = '';
+		if (!srcElement._errorDisplay) {
+			var ge = InputValidator._getGroupElements(srcElement);
+			for ( var i = 0, len = ge.length; i < len; i++) {
+				ge[i]._errorDisplay = true;
 			}
-		} else {
-			var errorElement = srcElement._errorElement;
-			if (!errorElement) {
-				errorElement = InputValidator._appendErrorElement(srcElement);
+			var type = srcElement.type;
+			var tagName = srcElement.tagName;
+			if (tagName == 'BUTTON'
+					|| (tagName == 'INPUT' && (type == 'hidden'
+							|| type == 'submit' || type == 'reset' || type == 'button'))) {
+				return;
 			}
-			if (errorElement) {
-				InputValidator._adjustLocationError(srcElement);
-				var errorStyle = errorElement.style;
-				var textElement = errorElement._textElement;
-				var textStyle = textElement.style;
-				if (errorElement._triangleElement) {
-					errorElement._triangleElement.style.display = '';
+			if (srcElement._rules && srcElement._rules.errorfor) {
+				var errorElement = srcElement._errorElement;
+				if (!errorElement) {
+					errorElement = document
+							.getElementById(srcElement._rules.errorfor);
+					if (errorElement) {
+						srcElement._errorElement = errorElement;
+						errorElement._srcElement = srcElement;
+					}
 				}
-				textElement.innerHTML = srcElement._error;
-				errorStyle.display = '';
+				if (errorElement) {
+					errorElement.innerHTML = srcElement._error;
+					var errorStyle = errorElement.style;
+					if (InputValidator.css.errorMessageClass) {
+						errorElement.className = InputValidator.css.errorMessageClass;
+					}
+					errorStyle.display = '';
+				}
+			} else {
+				var errorElement = srcElement._errorElement;
+				if (!errorElement) {
+					errorElement = InputValidator
+							._appendErrorElement(srcElement);
+				}
+				if (errorElement) {
+					InputValidator._adjustLocationError(srcElement);
+					var errorStyle = errorElement.style;
+					var textElement = errorElement._textElement;
+					var textStyle = textElement.style;
+					if (errorElement._triangleElement) {
+						errorElement._triangleElement.style.display = '';
+					}
+					textElement.innerHTML = srcElement._error;
+					errorStyle.display = '';
+				}
 			}
 		}
 	},
 
 	_hideError : function(srcElement) {
 		console.log('_hideError()');
-		var hide = function(srcElement) {
-			if (srcElement._rules && srcElement._rules.errorfor) {
-				var displayErrorElement = document
-						.getElementById(srcElement._rules.errorfor);
-				if (displayErrorElement) {
-					displayErrorElement.style.display = 'none';
-				}
-			} else {
-				var errorElement = srcElement._errorElement;
-				if (errorElement) {
-					errorElement.style.display = 'none';
+		if (srcElement._errorDisplay) {
+			var hide = function(srcElement) {
+				srcElement._errorDisplay = false;
+				if (srcElement._rules && srcElement._rules.errorfor) {
+					var displayErrorElement = document
+							.getElementById(srcElement._rules.errorfor);
+					if (displayErrorElement) {
+						displayErrorElement.style.display = 'none';
+					}
+				} else {
+					var errorElement = srcElement._errorElement;
+					if (errorElement) {
+						errorElement.style.display = 'none';
+					}
 				}
 			}
-		}
-		var ge = InputValidator._getGroupElements(srcElement);
-		for ( var i = 0, len = ge.length; i < len; i++) {
-			hide(ge[i]);
+			var ge = InputValidator._getGroupElements(srcElement);
+			for ( var i = 0, len = ge.length; i < len; i++) {
+				hide(ge[i]);
+			}
 		}
 	},
 
@@ -1227,7 +1285,8 @@ var InputValidator = {
 		}
 
 		// 表示メッセージ要素を追加
-		var textElement = InputValidator._createErrorTextElement(errorElement);
+		var textElement = InputValidator._createErrorTextElement(srcElement,
+				errorElement);
 		if (srcElement._error) {
 			textElement.innerHTML = srcElement._error;
 		}
@@ -1237,12 +1296,6 @@ var InputValidator = {
 			InputValidator._createUpTriangleElement(errorElement);
 		}
 
-		InputValidator.addEvent(errorElement, 'click', function(evt) {
-			errorElement.style.display = 'none';
-			srcElement.focus();
-			InputValidator.fireEvent(srcElement, 'mousedown');
-		});
-		InputValidator._displayError(srcElement);
 		return errorElement;
 	},
 
@@ -1261,6 +1314,7 @@ var InputValidator = {
 		errorStyle.cursor = 'default';
 		srcElement.parentNode.appendChild(errorElement);
 		srcElement._errorElement = errorElement;
+		errorElement._srcElement = srcElement;
 		return errorElement;
 	},
 
@@ -1320,11 +1374,12 @@ var InputValidator = {
 		return triangleElement;
 	},
 
-	_createErrorTextElement : function(errorElement) {
+	_createErrorTextElement : function(srcElement, errorElement) {
 		console.log('_createErrorTextElement()');
 		var textElement = document.createElement('div');
 		errorElement.appendChild(textElement);
 		errorElement._textElement = textElement;
+		textElement._srcElement = srcElement;
 		return textElement;
 	},
 

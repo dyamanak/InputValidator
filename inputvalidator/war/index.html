@@ -152,7 +152,7 @@ div.footer p.copyright {
 
 						<dl>
 							<dd>
-								<a href="download/inputvalidator-3.00-beta23.zip">inputvalidator-3.00-beta23.zip</a>
+								<a href="download/inputvalidator-3.00-beta24.zip">inputvalidator-3.00-beta24.zip</a>
 								<ul type="circle">
 									<li>for server (JavaSE1.4以上用)
 										<ul>
@@ -172,7 +172,7 @@ div.footer p.copyright {
 						<h3>バージョン</h3>
 
 						<dl>
-							<dd>3.00 beta23</dd>
+							<dd>3.00 beta24</dd>
 						</dl> <br />
 
 						<h3>ライセンス</h3>
@@ -377,25 +377,27 @@ div.footer p.copyright {
 						<tr valign="top">
 							<td width="25%">
 								<ol start="1">
+									<li><a href="tutorial/inputvalidator_tutorial_onload.html">ロード時のイベントを追加する</a>
+									</li>
 									<li><a href="tutorial/inputvalidator_tutorial_onsubmit.html">送信時のイベントを追加する</a>
 									</li>
 									<li><a href="tutorial/inputvalidator_tutorial_onreset.html">リセット時のイベントを追加する</a>
-									</li>
-									<li><a href="tutorial/inputvalidator_tutorial_onchange.html">編集時のイベントを追加する</a>
 									</li>
 									<li><a href="tutorial/inputvalidator_tutorial_oncheck.html">チェック時のイベントを追加する</a>
 									</li>
 								</ol></td>
 							<td width="25%">
 								<ol start="5">
-									<li><a href="tutorial/inputvalidator_tutorial_onload.html">ロード時のイベントを追加する</a>
+									<li><a href="tutorial/inputvalidator_tutorial_oninput.html">編集中のイベントを追加する</a>
 									</li>
-									<li><a href="tutorial/inputvalidator_tutorial_onclick.html">クリック時のイベントを追加する</a>
+									<li><a href="tutorial/inputvalidator_tutorial_onchange.html">編集後のイベントを追加する</a>
 									</li>
 								</ol></td>
 							<td width="25%">
 								<ol start="7">
-									<li><a href="tutorial/inputvalidator_tutorial_delay_check_all.html">送信時にまとめてチェックする</a>
+									<li><a href="tutorial/inputvalidator_tutorial_ischeck_oninput.html">編集中にチェックする</a>
+									</li>
+									<li><a href="tutorial/inputvalidator_tutorial_ischeck_onchange.html">送信時にまとめてチェックする</a>
 									</li>
 								</ol></td>
 						</tr>
@@ -498,6 +500,19 @@ div.footer p.copyright {
 					<td>チェックルール</td>
 					<td>種類</td>
 					<td>記述例</td>
+				</tr>
+				<tr>
+					<td>oninput</td>
+					<td><a href="tutorial/inputvalidator_tutorial_oninput.html">編集中イベント設定</a>
+					</td>
+					<td><pre>
+item1 : {
+	oninput : function(evt) {
+		document.getElementById('viewKeyword').innerHTML = this.value;
+	}
+}
+</pre>
+					</td>
 				</tr>
 				<tr>
 					<td>autofocus</td>
@@ -889,6 +904,16 @@ item3 : {
 					<td>記述例</td>
 				</tr>
 				<tr>
+					<td>onLoad</td>
+					<td><a href="tutorial/inputvalidator_tutorial_onload.html">Loadイベント</a></td>
+					<td><pre>
+onLoad : function() {
+	alert('画面の初期処理があれば、ここに書きます。');
+}
+</pre>
+					</td>
+				</tr>
+				<tr>
 					<td>onSubmit</td>
 					<td><a href="tutorial/inputvalidator_tutorial_onsubmit.html">Submitイベント</a></td>
 					<td><pre>
@@ -943,27 +968,6 @@ onCheck : function(elements) {
 	} else {
 		alert("入力エラーはありません。");
 	}
-}
-</pre>
-					</td>
-				</tr>
-				<tr>
-					<td>onLoad</td>
-					<td><a href="tutorial/inputvalidator_tutorial_onload.html">Loadイベント</a></td>
-					<td><pre>
-onLoad : function() {
-	alert('画面の初期処理があれば、ここに書きます。');
-}
-</pre>
-					</td>
-				</tr>
-				<tr>
-					<td>onClick</td>
-					<td><a href="tutorial/inputvalidator_tutorial_onclick.html">Clickイベント</a></td>
-					<td><pre>
-onClick : function(evt) {
-	var element = this;
-	alert(element.name + '=' + element.value);
 }
 </pre>
 					</td>

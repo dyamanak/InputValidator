@@ -87,14 +87,19 @@ public class InputValidatorJavaTest extends TestCase {
 		assertEquals(1, list.size());
 
 		bean = new TestBean();
-		bean.setAge("1,234");
+		bean.setAge("1,234"); // 金額の区切り文字（,）はエラーとみなす
+		list = validate(bean);
+		assertEquals(1, list.size());
+
+		bean = new TestBean();
+		bean.setAge("02"); // 8進数
 		list = validate(bean);
 		assertEquals(0, list.size());
 
 		bean = new TestBean();
-		bean.setAge("1,234.123");
+		bean.setAge("0x10"); // 16進数
 		list = validate(bean);
-		assertEquals(0, list.size());
+		assertEquals(1, list.size());
 
 		/**
 		 * test email

@@ -148,10 +148,10 @@ InputValidator.validationRules = {
 		var isValid = true;
 		var errorMessage = '';
 		if (value) {
-			if (!value.match(/^[+\\-]?[0-9,\\.]+$/)) {
+			if (!value.match(/^[+\\-]?[0-9\\.]+$/)) {
 				isValid = false;
 			}
-			if (isValid && isNaN(value.replace(',', ''))) {
+			if (isValid && isNaN(value)) {
 				isValid = false;
 			}
 			if (!isValid) {

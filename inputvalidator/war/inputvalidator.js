@@ -1656,9 +1656,9 @@ var InputValidator = {
 		}
 	},
 
-	// TODO
 	console : {
 		log : function(message) {
+			// デバッグ用
 			// console.log(message);
 		},
 		show : function() {
@@ -1722,7 +1722,7 @@ InputValidator.addEvent(window, 'resize', function() {
 	InputValidator.resize();
 });
 
-if (!window.console) {
+if (!window.console) { // for IE6
 	window.console = {
 		log : function(message) {
 			return true;

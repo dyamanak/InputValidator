@@ -862,7 +862,7 @@ var InputValidator = {
 			newValue = newValue.slice(newValue.length - keta);
 			return newValue;
 		};
-		var parseFormat = format.toLower();
+		var parseFormat = format.toLowerCase();
 		var result = parseFormat;
 		if (parseFormat.indexOf('yyyy') >= 0) {
 			result = result.replace(/yyyy/, date.getFullYear());
@@ -1656,9 +1656,9 @@ var InputValidator = {
 		}
 	},
 
-	// TODO
 	console : {
 		log : function(message) {
+			// デバッグ用
 			// console.log(message);
 		},
 		show : function() {
@@ -1722,7 +1722,7 @@ InputValidator.addEvent(window, 'resize', function() {
 	InputValidator.resize();
 });
 
-if (!window.console) {
+if (!window.console) { // for IE6
 	window.console = {
 		log : function(message) {
 			return true;

@@ -854,7 +854,7 @@ item1 : {
 				<tr>
 					<td>func</td>
 					<td><a
-						href="tutorial/inputvalidator_tutorial_custom_yubin.html">独自の関数チェック</a>
+						href="tutorial/inputvalidator_tutorial_custom_event.html">独自の関数チェック</a>
 					</td>
 					<td><pre>
 item1 : {
@@ -887,6 +887,26 @@ item3 : {
 		}
 	]
 }
+</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>オリジナル</td>
+					<td><a href="tutorial/inputvalidator_tutorial_checkbox_c.html">チェック仕様追加</a>
+					</td>
+					<td><pre>
+item1 : {
+	zipcode : true,
+	error : '7桁の数字で入力してください。'
+}
+
+InputValidator.validationRules.zipcode = function(value, rules) {
+	if (value) {
+		return (/^(\d{7})$/.test(value));
+	} else {
+		return true;
+	}
+};
 </pre>
 					</td>
 				</tr>

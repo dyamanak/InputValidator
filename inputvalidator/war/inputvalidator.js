@@ -862,7 +862,7 @@ var InputValidator = {
 			newValue = newValue.slice(newValue.length - keta);
 			return newValue;
 		};
-		var parseFormat = format.toLower();
+		var parseFormat = format.toLowerCase();
 		var result = parseFormat;
 		if (parseFormat.indexOf('yyyy') >= 0) {
 			result = result.replace(/yyyy/, date.getFullYear());

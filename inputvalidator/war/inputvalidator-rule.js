@@ -150,6 +150,11 @@ InputValidator.validationRules = {
 		if (value) {
 			if (!value.match(/^[+\\-]?[0-9,\\.]+$/)) {
 				isValid = false;
+			}
+			if (isValid && isNaN(value.replace(',', ''))) {
+				isValid = false;
+			}
+			if (!isValid) {
 				if (typeof (rules) == 'object') {
 					errorMessage = rules.error;
 				}

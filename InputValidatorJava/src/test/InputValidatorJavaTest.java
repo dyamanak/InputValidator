@@ -71,6 +71,31 @@ public class InputValidatorJavaTest extends TestCase {
 		list = validate(bean);
 		assertEquals(1, list.size());
 
+		bean = new TestBean();
+		bean.setAge("1.23");
+		list = validate(bean);
+		assertEquals(0, list.size());
+
+		bean = new TestBean();
+		bean.setAge(".23");
+		list = validate(bean);
+		assertEquals(0, list.size());
+
+		bean = new TestBean();
+		bean.setAge("1.2.3.4.5");
+		list = validate(bean);
+		assertEquals(1, list.size());
+
+		bean = new TestBean();
+		bean.setAge("1,234");
+		list = validate(bean);
+		assertEquals(0, list.size());
+
+		bean = new TestBean();
+		bean.setAge("1,234.123");
+		list = validate(bean);
+		assertEquals(0, list.size());
+
 		/**
 		 * test email
 		 */

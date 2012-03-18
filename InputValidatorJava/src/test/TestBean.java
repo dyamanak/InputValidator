@@ -9,23 +9,27 @@ public class TestBean implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String name;
+	private String name = "12345678";
 
-	private String age;
+	private String age = "20";
 
-	private String email;
+	private String email = "test@test.com";
 
-	private String zipcode;
+	private String zipcode = "9876543";
 
-	private String address;
+	private String zipcode2 = "9876543";
 
-	private String sex;
+	private String[] hobby = { "drive", "movie" };
 
-	private String[] hobby;
+	private String date1 = "2012/03/17";
 
-	private String[] animal;
+	private String date2 = "20120317";
 
-	private String etc;
+	private String date3 = "0317";
+
+	private String hankaku1 = "abcde";
+
+	private String zenkaku1 = "ａｂｃｄｅ";
 
 	/**
 	 * nameを取得します。
@@ -104,41 +108,22 @@ public class TestBean implements Serializable {
 	}
 
 	/**
-	 * addressを取得します。
+	 * zipcode2を取得します。
 	 * 
-	 * @return address
+	 * @return zipcode2
 	 */
-	public String getAddress() {
-		return address;
+	public String getZipcode2() {
+		return zipcode2;
 	}
 
 	/**
-	 * addressを設定します。
+	 * zipcode2を設定します。
 	 * 
-	 * @param address
-	 *            address
+	 * @param zipcode2
+	 *            zipcode2
 	 */
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	/**
-	 * sexを取得します。
-	 * 
-	 * @return sex
-	 */
-	public String getSex() {
-		return sex;
-	}
-
-	/**
-	 * sexを設定します。
-	 * 
-	 * @param sex
-	 *            sex
-	 */
-	public void setSex(String sex) {
-		this.sex = sex;
+	public void setZipcode2(String zipcode2) {
+		this.zipcode2 = zipcode2;
 	}
 
 	/**
@@ -161,41 +146,98 @@ public class TestBean implements Serializable {
 	}
 
 	/**
-	 * animalを取得します。
+	 * date1を取得します。
 	 * 
-	 * @return animal
+	 * @return date1
 	 */
-	public String[] getAnimal() {
-		return animal;
+	public String getDate1() {
+		return date1;
 	}
 
 	/**
-	 * animalを設定します。
+	 * date1を設定します。
 	 * 
-	 * @param animal
-	 *            animal
+	 * @param date1
+	 *            date1
 	 */
-	public void setAnimal(String[] animal) {
-		this.animal = animal;
+	public void setDate1(String date1) {
+		this.date1 = date1;
 	}
 
 	/**
-	 * etcを取得します。
+	 * date2を取得します。
 	 * 
-	 * @return etc
+	 * @return date2
 	 */
-	public String getEtc() {
-		return etc;
+	public String getDate2() {
+		return date2;
 	}
 
 	/**
-	 * etcを設定します。
+	 * date2を設定します。
 	 * 
-	 * @param etc
-	 *            etc
+	 * @param date2
+	 *            date2
 	 */
-	public void setEtc(String etc) {
-		this.etc = etc;
+	public void setDate2(String date2) {
+		this.date2 = date2;
+	}
+
+	/**
+	 * date3を取得します。
+	 * 
+	 * @return date3
+	 */
+	public String getDate3() {
+		return date3;
+	}
+
+	/**
+	 * date3を設定します。
+	 * 
+	 * @param date3
+	 *            date3
+	 */
+	public void setDate3(String date3) {
+		this.date3 = date3;
+	}
+
+	/**
+	 * hankaku1を取得します。
+	 * 
+	 * @return hankaku1
+	 */
+	public String getHankaku1() {
+		return hankaku1;
+	}
+
+	/**
+	 * hankaku1を設定します。
+	 * 
+	 * @param hankaku1
+	 *            hankaku1
+	 */
+	public void setHankaku1(String hankaku1) {
+		this.hankaku1 = hankaku1;
+	}
+
+	/**
+	 * zenkaku1を取得します。
+	 * 
+	 * @return zenkaku1
+	 */
+	public String getZenkaku1() {
+		return zenkaku1;
+	}
+
+	/**
+	 * zenkaku1を設定します。
+	 * 
+	 * @param zenkaku1
+	 *            zenkaku1
+	 */
+	public void setZenkaku1(String zenkaku1) {
+		this.zenkaku1 = zenkaku1;
 	}
 
 }

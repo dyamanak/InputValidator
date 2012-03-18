@@ -3,8 +3,14 @@ InputValidator.configure = {
 	form1 : {
 		name : {
 			placeholder : '必須入力',
+			autofocus : true,
+			readonly : true,
 			required : {
 				error : '氏名が入力されていません。'
+			},
+			minlength : {
+				minlength : 5,
+				error : '氏名を5文字以上で入力してください。'
 			},
 			maxlength : {
 				maxlength : 10,
@@ -12,9 +18,8 @@ InputValidator.configure = {
 			}
 		},
 		age : {
-			placeholder : '必須入力',
-			required : {
-				error : '年齢が入力されていません。'
+			number : {
+				error : '年齢を数値で入力してください。'
 			},
 			min : {
 				min : 0,
@@ -26,20 +31,11 @@ InputValidator.configure = {
 			}
 		},
 		email : {
-			placeholder : '必須入力',
-			required : {
-				error : 'E-Mailアドレスが入力されていません。'
-			},
-			maxlength : {
-				maxlength : 50,
-				error : 'E-Mailアドレスを50文字以内で入力してください。'
-			},
 			email : {
 				error : 'E-Mailアドレスを正しく入力してください。'
 			}
 		},
 		zipcode : {
-			placeholder : '7桁の数字',
 			pattern : {
 				pattern : /^\d+$/,
 				error : '郵便番号を数字で入力してください。'
@@ -49,17 +45,9 @@ InputValidator.configure = {
 				error : '郵便番号を7桁の数字で入力してください。'
 			}
 		},
-		address : {
-			placeholder : '50文字まで',
-			maxlength : {
-				maxlength : 50,
-				error : '住所を50文字以内で入力してください。'
-			}
-		},
-		sex : {
-			required : {
-				error : '性別を必ず選択してください。'
-			}
+		zipcode2 : {
+			zipcode : true,
+			error : '郵便番号を7桁の数字で入力してください。'
 		},
 		hobby : {
 			minchecked : {
@@ -71,25 +59,34 @@ InputValidator.configure = {
 				error : '趣味は3つ以上選択できません。'
 			}
 		},
-		animal : {
-			required : {
-				error : '好きな動物を必ず選択してください。'
-			}
-		},
-		etc : {
-			placeholder : '必須入力',
-			required : {
-				error : '備考欄を必ず入力してください。'
+		date1 : {
+			date : {
+				format : 'yyyy/MM/dd'
 			},
-			maxlength : {
-				maxlength : 100,
-				error : '備考欄を100文字以内で入力してください。'
-			}
+			error : '誕生日は日付を入力してください。'
+		},
+		date2 : {
+			date : {
+				format : 'yyyyMMdd'
+			},
+			error : '誕生日は日付を入力してください。'
+		},
+		date3 : {
+			date : {
+				format : 'MMdd'
+			},
+			error : '誕生日は日付を入力してください。'
+		},
+		hankaku1 : {
+			hankaku : true,
+			error : '半角で入力してください。'
+		},
+		zenkaku1 : {
+			zenkaku : true,
+			error : '全角で入力してください。'
 		}
 	}
 };
-
-// 送信・リセット・変更時イベント設定
 InputValidator.customEvent = {
 	form1 : {
 		onSubmit : function(evt) {
@@ -119,5 +116,12 @@ InputValidator.customEvent = {
 		} else {
 			return true;
 		}
+	}
+};
+InputValidator.validationRules.zipcode = function(value, rules) {
+	if (value) {
+		return (/^(\d{7})$/.test(value));
+	} else {
+		return true;
 	}
 };

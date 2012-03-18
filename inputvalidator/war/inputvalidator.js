@@ -43,7 +43,7 @@ var InputValidator = {
 	},
 
 	addEvent : function(element, eventName, func) {
-		// console.log('addEvent()');
+		// InputValidator.console.log('addEvent()');
 		if (element.addEventListener) {
 			element.addEventListener(eventName, func, false);
 		} else {
@@ -53,7 +53,7 @@ var InputValidator = {
 	},
 
 	stopEventBubbling : function(evt) {
-		// console.log('stopEventBubbling()');
+		// InputValidator.console.log('stopEventBubbling()');
 		evt.stopped = true;
 		if (evt.preventDefault) {
 			evt.preventDefault();
@@ -64,7 +64,7 @@ var InputValidator = {
 	},
 
 	getEventElement : function(evt) {
-		// console.log('getEventElement()');
+		// InputValidator.console.log('getEventElement()');
 		var element = evt.srcElement || evt.target;
 		if (element.tagName == 'OPTION') {
 			// OPTION Node -> SELECT Node for Firefox
@@ -74,7 +74,7 @@ var InputValidator = {
 	},
 
 	hasStyleRule : function(selector) {
-		// console.log('hasStyleRule()');
+		// InputValidator.console.log('hasStyleRule()');
 		var hasStyleRule = false;
 		var styleSheets = document.styleSheets;
 		for ( var i = 0, ilen = styleSheets.length; i < ilen; i++) {
@@ -96,7 +96,7 @@ var InputValidator = {
 	},
 
 	createStyleSheet : function() {
-		// console.log('createStyleSheet()');
+		// InputValidator.console.log('createStyleSheet()');
 		var sheet;
 		if (InputValidator.UserAgent.MSIE) {
 			sheet = document.createStyleSheet();
@@ -113,7 +113,7 @@ var InputValidator = {
 	},
 
 	addStyleRule : function(selector, declaration) {
-		// console.log('addStyleRule()');
+		// InputValidator.console.log('addStyleRule()');
 		var sheet = InputValidator.styleSheet;
 		if (!sheet) {
 			sheet = InputValidator.createStyleSheet();
@@ -128,7 +128,7 @@ var InputValidator = {
 
 	// 入力チェック機能を注入する
 	setRulesAll : function() {
-		console.log('setRulesAll()');
+		InputValidator.console.log('setRulesAll()');
 
 		// disable resize event
 		InputValidator.disabledResize = true;
@@ -221,7 +221,7 @@ var InputValidator = {
 	},
 
 	setRules : function(element, rules) {
-		console.log('setRules()');
+		InputValidator.console.log('setRules()');
 		// 引数に入力規則が指定された場合、要素に設定する
 		if (rules) {
 			element._rules = rules;
@@ -235,49 +235,11 @@ var InputValidator = {
 		// 入力要素に入力チェックフラグのプロパティを追加する
 		element._isValid = true;
 
-		// 入力規則として、フォーカスが指定されている場合、フォーカスする
-		if (rules.autofocus) {
-			setTimeout(function(element) {
-				return function() {
-					element.focus();
-					InputValidator.fireEvent(element, 'mousedown');
-				};
-			}(element), 0);
-		}
-
-		// 入力規則として、半角での入力が指定されている場合、テキストの入力モードは「ime-mode:disabled」とする
-		if (rules.hankaku || rules.number) {
-			element.style.imeMode = 'disabled';
-		}
-
-		// 入力規則として、半角での入力が指定されている場合、テキストの入力モードは「ime-mode:disabled」とする
-		if (rules.zenkaku) {
-			element.style.imeMode = 'active';
-		}
-
-		// 入力規則として、readonlyが指定されている場合、変更不可とする
-		if (rules.readonly) {
-			element.readOnly = true;
-			if (InputValidator.css.readonlyClass) {
-				element.className = InputValidator.css.readonlyClass;
-			}
-		}
-
-		// 入力規則として、maxlengthが指定されている場合、要素にmaxlength属性を設定する
-		if (rules.maxlength) {
-			var maxlength;
-			if (typeof (rules.maxlength) == 'object') {
-				maxlength = parseInt(rules.maxlength.maxlength, 10);
-			} else {
-				maxlength = parseInt(rules.maxlength, 10);
-			}
-			element.maxlength = maxlength;
-		}
-
-		// 入力規則として、数値が指定されている場合、右寄せを設定する
-		if (rules.number) {
-			if (!element.style.textAlign) {
-				element.style.textAlign = 'right';
+		// プラグインを実施する
+		var pluginRules = InputValidator.pluginRules;
+		for ( var pluginRule in pluginRules) {
+			if (rules[pluginRule]) {
+				pluginRules[pluginRule].call(this, element, rules);
 			}
 		}
 
@@ -335,8 +297,38 @@ var InputValidator = {
 		}
 	},
 
+	// TODO
+	pluginRule : function(value, rules) {
+		var isValid = true;
+		var errorMessage = null;
+		for ( var ruleKey in rules) {
+			var plugin = InputValidator.pluginRules[ruleKey];
+			if (plugin) {
+				var result = plugin.call(this, value, rules[ruleKey]);
+				if (typeof result == 'object') {
+					isValid = result.isValid;
+					errorMessage = result.errorMessage;
+				} else if (typeof result == 'boolean') {
+					isValid = result;
+				} else {
+					alert('[' + ruleKey + ']の戻り値が不正です。\nプログラムを修正してください。');
+				}
+			} else {
+				alert('[' + ruleKey + ']というチェックルールはありません。\n要素名[' + this.name
+						+ ']のチェックルールを修正してください。');
+			}
+			if (!isValid) {
+				break;
+			}
+		}
+		return {
+			isValid : isValid,
+			errorMessage : errorMessage
+		};
+	},
+
 	_getAttributeValue : function(element, attr) {
-		// console.log('_getAttributeValue()');
+		// InputValidator.console.log('_getAttributeValue()');
 		if (element && element.attributes
 				&& element.attributes.getNamedItem(attr)) {
 			return element.attributes.getNamedItem(attr).value;
@@ -347,12 +339,12 @@ var InputValidator = {
 
 	_eventHandlerKeyDown : function(evt) {
 		var srcElement = InputValidator.getEventElement(evt);
-		console.log('_eventHandlerKeyDown(' + srcElement.tagName + ','
-				+ srcElement.name + ')');
+		InputValidator.console.log('_eventHandlerKeyDown(' + srcElement.tagName
+				+ ',' + srcElement.name + ')');
 		if (srcElement._srcElement) {
 			srcElement = srcElement._srcElement;
-			console.log('_eventHandlerKeyDown(' + srcElement.tagName + ','
-					+ srcElement.name + ')');
+			InputValidator.console.log('_eventHandlerKeyDown('
+					+ srcElement.tagName + ',' + srcElement.name + ')');
 		}
 		var value = InputValidator.getElementValue(srcElement);
 		if (srcElement._realtimePreviousValue != value) {
@@ -371,15 +363,16 @@ var InputValidator = {
 
 	_eventHandlerMouseDown : function(evt) {
 		var srcElement = InputValidator.getEventElement(evt);
-		console.log('_eventHandlerMouseDown(' + srcElement.tagName + ','
-				+ srcElement.name + ')');
+		InputValidator.console.log('_eventHandlerMouseDown('
+				+ srcElement.tagName + ',' + srcElement.name + ')');
 		if (srcElement._srcElement) {
 			srcElement = srcElement._srcElement;
-			console.log('_eventHandlerMouseDown(' + srcElement.tagName + ','
-					+ srcElement.name + ')');
-			console.log('_eventHandlerMouseDown canceld.');
+			InputValidator.console.log('_eventHandlerMouseDown('
+					+ srcElement.tagName + ',' + srcElement.name + ')');
+			InputValidator.console.log('_eventHandlerMouseDown canceld.');
 			InputValidator.stopEventBubbling(evt);
-			console.log('_eventHandlerMouseDown delegate mousedown.');
+			InputValidator.console
+					.log('_eventHandlerMouseDown delegate mousedown.');
 			setTimeout(function(srcElement) {
 				return function() {
 					srcElement.focus();
@@ -412,12 +405,12 @@ var InputValidator = {
 
 	_eventHandlerClick : function(evt) {
 		var srcElement = InputValidator.getEventElement(evt);
-		console.log('_eventHandlerClick(' + srcElement.tagName + ','
-				+ srcElement.name + ')');
+		InputValidator.console.log('_eventHandlerClick(' + srcElement.tagName
+				+ ',' + srcElement.name + ')');
 		if (srcElement._srcElement) {
 			srcElement = srcElement._srcElement;
-			console.log('_eventHandlerClick(' + srcElement.tagName + ','
-					+ srcElement.name + ')');
+			InputValidator.console.log('_eventHandlerClick('
+					+ srcElement.tagName + ',' + srcElement.name + ')');
 		}
 		if (InputValidator.currentActiveElement === srcElement) {
 			if (InputValidator._isLeftClick(evt) || evt.keyCode === 32
@@ -430,15 +423,15 @@ var InputValidator = {
 							InputValidator.currentActiveElement, evt);
 				}
 			}
-			console.log('-- click --');
+			InputValidator.console.log('-- click --');
 			InputValidator.currentActiveElement = srcElement;
 		} else {
-			console.log('-- not click --');
+			InputValidator.console.log('-- not click --');
 		}
 	},
 
 	_isLeftClick : function(evt) {
-		// console.log('_isLeftClick()');
+		// InputValidator.console.log('_isLeftClick()');
 		if (InputValidator.UserAgent.MSIE) {
 			return event.button === 1;
 		} else if (InputValidator.UserAgent.AppleWebKit) {
@@ -449,7 +442,7 @@ var InputValidator = {
 	},
 
 	_isButtonRadioCheckbox : function(element) {
-		// console.log('_isButtonRadioCheckbox()');
+		// InputValidator.console.log('_isButtonRadioCheckbox()');
 		if ((element.tagName == 'INPUT' && (element.type == 'button'
 				|| element.type == 'radio' || element.type == 'checkbox'))
 				|| element.tagName == 'BUTTON') {
@@ -460,7 +453,7 @@ var InputValidator = {
 	},
 
 	_isInputElement : function(element) {
-		// console.log('_isInputElement()');
+		// InputValidator.console.log('_isInputElement()');
 		if ((element.tagName == 'INPUT' && element.type != 'hidden')
 				|| element.tagName == 'BUTTON' || element.tagName == 'SELECT'
 				|| element.tagName == 'TEXTAREA') {
@@ -471,11 +464,11 @@ var InputValidator = {
 	},
 
 	resize : function() {
-		console.log('resize()');
+		InputValidator.console.log('resize()');
 
 		// cancel resize loop
 		if (InputValidator.disabledResize) {
-			console.log('resize cancel.');
+			InputValidator.console.log('resize cancel.');
 			return;
 		}
 
@@ -502,7 +495,7 @@ var InputValidator = {
 	},
 
 	redraw : function() {
-		console.log('redraw()');
+		InputValidator.console.log('redraw()');
 		var allElements = InputValidator.allElements;
 		for ( var i = 0, len = allElements.length; i < len; i++) {
 			var srcElement = allElements[i];
@@ -518,7 +511,7 @@ var InputValidator = {
 	},
 
 	check : function(formElement) {
-		console.log('check()');
+		InputValidator.console.log('check()');
 		if (!formElement) {
 			alert('check()の引数に、フォーム要素が指定されていません。');
 			return false;
@@ -567,7 +560,7 @@ var InputValidator = {
 	},
 
 	_submitForm : function(evt) {
-		console.log('_submitForm()');
+		InputValidator.console.log('_submitForm()');
 		var formElement = InputValidator.getEventElement(evt);
 		var isValid = true;
 		var errorMessage = null;
@@ -629,7 +622,7 @@ var InputValidator = {
 	},
 
 	_resetForm : function(evt) {
-		console.log('_resetForm()');
+		InputValidator.console.log('_resetForm()');
 		// form要素にreset時のコールバック関数が設定されている場合、コールする
 		var isReset = true;
 		var formElement = InputValidator.getEventElement(evt);
@@ -662,7 +655,7 @@ var InputValidator = {
 	},
 
 	_changeValue : function(srcElement) {
-		console.log('_changeValue()');
+		InputValidator.console.log('_changeValue()');
 		// 入力欄の値編集時のコールバック関数が設定されている場合、コールする
 		var formElement = srcElement.form;
 		var formName = InputValidator._getAttributeValue(formElement, 'name');
@@ -679,13 +672,13 @@ var InputValidator = {
 	},
 
 	_setPreviousValue : function(srcElement) {
-		// console.log('_setPreviousValue()');
+		// InputValidator.console.log('_setPreviousValue()');
 		// 変更前の入力値を保存
 		srcElement._previousValue = InputValidator.getElementValue(srcElement);
 	},
 
 	_checkChangeValue : function(srcElement) {
-		console.log('_checkChangeValue()');
+		InputValidator.console.log('_checkChangeValue()');
 		var value = InputValidator.getElementValue(srcElement);
 		var tag = srcElement.tagName;
 		if (tag == 'INPUT') {
@@ -720,7 +713,7 @@ var InputValidator = {
 	},
 
 	_keypressElement : function(evt) {
-		console.log('_keypressElement()');
+		InputValidator.console.log('_keypressElement()');
 		var kcode = evt.keyCode;
 		if (kcode == Event.KEY_RETURN) {
 			InputValidator.stopEventBubbling(evt);
@@ -728,7 +721,7 @@ var InputValidator = {
 	},
 
 	_focusElement : function(evt) {
-		console.log('_focusElement()');
+		InputValidator.console.log('_focusElement()');
 		var srcElement = this;
 		if (srcElement.readOnly || srcElement.disabled) {
 			return true;
@@ -753,7 +746,7 @@ var InputValidator = {
 	},
 
 	_blurElement : function(evt) {
-		console.log('_blurElement()');
+		InputValidator.console.log('_blurElement()');
 		var srcElement = this;
 		if (srcElement.readOnly) {
 			return true;
@@ -777,7 +770,7 @@ var InputValidator = {
 	},
 
 	_clickElement : function(evt) {
-		console.log('_clickElement()');
+		InputValidator.console.log('_clickElement()');
 		var srcElement = this;
 		if (srcElement.readOnly) {
 			return true;
@@ -808,7 +801,7 @@ var InputValidator = {
 	},
 
 	formatDateElement : function(srcElement) {
-		console.log('formatDateElement()');
+		InputValidator.console.log('formatDateElement()');
 		var rules = srcElement._rules;
 		if (!rules) {
 			return;
@@ -862,35 +855,36 @@ var InputValidator = {
 	},
 
 	formatDate : function(date, format) {
-		console.log('formatDate()');
+		InputValidator.console.log('formatDate()');
 		var getLpadZero = function(value, keta) {
 			var intValue = parseInt(value, 10);
 			var newValue = '000' + intValue;
 			newValue = newValue.slice(newValue.length - keta);
 			return newValue;
 		};
-		var result = format;
-		if (format.indexOf('yyyy') >= 0) {
+		var parseFormat = format.toLower();
+		var result = parseFormat;
+		if (parseFormat.indexOf('yyyy') >= 0) {
 			result = result.replace(/yyyy/, date.getFullYear());
-		} else if (format.indexOf('yy') >= 0) {
+		} else if (parseFormat.indexOf('yy') >= 0) {
 			result = result.replace(/yy/, getLpadZero(date.getFullYear() % 100,
 					2));
 		}
-		if (format.indexOf('MM') >= 0) {
-			result = result.replace(/MM/, getLpadZero(date.getMonth() + 1, 2));
-		} else if (format.indexOf('M') >= 0) {
-			result = result.replace(/M/, date.getMonth() + 1);
+		if (parseFormat.indexOf('mm') >= 0) {
+			result = result.replace(/mm/, getLpadZero(date.getMonth() + 1, 2));
+		} else if (parseFormat.indexOf('m') >= 0) {
+			result = result.replace(/m/, date.getMonth() + 1);
 		}
-		if (format.indexOf('dd') >= 0) {
+		if (parseFormat.indexOf('dd') >= 0) {
 			result = result.replace(/dd/, getLpadZero(date.getDate(), 2));
-		} else if (format.indexOf('d') >= 0) {
+		} else if (parseFormat.indexOf('d') >= 0) {
 			result = result.replace(/d/, date.getDate());
 		}
 		return result;
 	},
 
 	validateElement : function(srcElement, isOnInput) {
-		console.log('validateElement()');
+		InputValidator.console.log('validateElement()');
 		var rules = srcElement._rules;
 		if (!rules) {
 			return;
@@ -945,9 +939,6 @@ var InputValidator = {
 				}
 			}
 			if (!errorMessage) {
-				errorMessage = rules.error;
-			}
-			if (!errorMessage) {
 				errorMessage = '無効な値です';
 			}
 			if (errorMessage) {
@@ -962,7 +953,7 @@ var InputValidator = {
 	},
 
 	_getElementsByConfigure : function() {
-		console.log('_getElementsByConfigure()');
+		InputValidator.console.log('_getElementsByConfigure()');
 		// InputValidator.configureの入力チェック設定を読み込む
 		var elements, element, formElement, objList, objName, obj, formList, formName;
 		formName = undefined;
@@ -1037,7 +1028,7 @@ var InputValidator = {
 	},
 
 	_displayPlaceholder : function(srcElement, value, isRedraw) {
-		console.log('_displayPlaceholder()');
+		InputValidator.console.log('_displayPlaceholder()');
 		if (!srcElement._placeholderDisplay) {
 			srcElement._placeholderDisplay = true;
 			var type = srcElement.type;
@@ -1098,7 +1089,7 @@ var InputValidator = {
 	},
 
 	_hidePlaceholder : function(srcElement) {
-		console.log('_hidePlaceholder()');
+		InputValidator.console.log('_hidePlaceholder()');
 		if (srcElement._placeholderDisplay) {
 			srcElement._placeholderDisplay = false;
 			var hide = function(srcElement) {
@@ -1123,7 +1114,7 @@ var InputValidator = {
 	},
 
 	_appendPlaceholderElement : function(srcElement) {
-		console.log('_appendPlaceholderElement()');
+		InputValidator.console.log('_appendPlaceholderElement()');
 		var srcElementId = srcElement.id;
 		if (!srcElementId) {
 			srcElementId = '_srcId_' + InputValidator.idIndex++;
@@ -1143,7 +1134,7 @@ var InputValidator = {
 	},
 
 	_createPlaceholderElement : function(srcElement) {
-		console.log('_createPlaceholderElement()');
+		InputValidator.console.log('_createPlaceholderElement()');
 		var placeholderElement = document.createElement('div');
 		var placeholderId = '_placeholderId_'
 				+ InputValidator.placeholderIndex++;
@@ -1163,7 +1154,7 @@ var InputValidator = {
 	},
 
 	_createPlaceholderTextElement : function(srcElement, placeholderElement) {
-		console.log('_createPlaceholderTextElement()');
+		InputValidator.console.log('_createPlaceholderTextElement()');
 		var textElement = document.createElement('div');
 		placeholderElement.appendChild(textElement);
 		placeholderElement._textElement = textElement;
@@ -1172,7 +1163,7 @@ var InputValidator = {
 	},
 
 	_adjustLocationPlaceholder : function(srcElement) {
-		console.log('_adjustLocationPlaceholder()');
+		InputValidator.console.log('_adjustLocationPlaceholder()');
 		var placeholderElement = srcElement._placeholderElement;
 		var srcElementOffset = InputValidator._getOffset(srcElement);
 		var srcElementSize = InputValidator._getSize(srcElement);
@@ -1193,7 +1184,7 @@ var InputValidator = {
 	},
 
 	_displayError : function(srcElement) {
-		console.log('_displayError()');
+		InputValidator.console.log('_displayError()');
 		if (!srcElement._errorDisplay) {
 			var ge = InputValidator._getGroupElements(srcElement);
 			for ( var i = 0, len = ge.length; i < len; i++) {
@@ -1246,7 +1237,7 @@ var InputValidator = {
 	},
 
 	_hideError : function(srcElement) {
-		console.log('_hideError()');
+		InputValidator.console.log('_hideError()');
 		if (srcElement._errorDisplay) {
 			var hide = function(srcElement) {
 				srcElement._errorDisplay = false;
@@ -1271,7 +1262,7 @@ var InputValidator = {
 	},
 
 	_appendErrorElement : function(srcElement) {
-		console.log('_appendErrorElement()');
+		InputValidator.console.log('_appendErrorElement()');
 		var srcElementId = srcElement.id;
 		if (!srcElementId) {
 			srcElementId = '_srcId_' + InputValidator.idIndex++;
@@ -1300,7 +1291,7 @@ var InputValidator = {
 	},
 
 	_createErrorElement : function(srcElement) {
-		console.log('_createErrorElement()');
+		InputValidator.console.log('_createErrorElement()');
 		var errorElement = document.createElement('div');
 		var errorId = '_errorId_' + InputValidator.errorIndex++;
 		errorElement.id = errorId;
@@ -1319,7 +1310,7 @@ var InputValidator = {
 	},
 
 	_createDownTriangleElement : function(errorElement) {
-		console.log('_createDownTriangleElement()');
+		InputValidator.console.log('_createDownTriangleElement()');
 		var triangleElement = document.createElement('div');
 
 		var taLeft = document.createElement('div');
@@ -1347,7 +1338,7 @@ var InputValidator = {
 	},
 
 	_createUpTriangleElement : function(errorElement) {
-		console.log('_createUpTriangleElement()');
+		InputValidator.console.log('_createUpTriangleElement()');
 		var triangleElement = document.createElement('div');
 
 		var taLeft = document.createElement('div');
@@ -1375,7 +1366,7 @@ var InputValidator = {
 	},
 
 	_createErrorTextElement : function(srcElement, errorElement) {
-		console.log('_createErrorTextElement()');
+		InputValidator.console.log('_createErrorTextElement()');
 		var textElement = document.createElement('div');
 		errorElement.appendChild(textElement);
 		errorElement._textElement = textElement;
@@ -1384,7 +1375,7 @@ var InputValidator = {
 	},
 
 	_adjustLocationError : function(srcElement) {
-		console.log('_adjustLocationError()');
+		InputValidator.console.log('_adjustLocationError()');
 		var errorElement = srcElement._errorElement;
 		var srcElementOffset = InputValidator._getOffset(srcElement);
 		var srcElementSize = InputValidator._getSize(srcElement);
@@ -1411,7 +1402,7 @@ var InputValidator = {
 	},
 
 	fireEvent : function(element, eventName) {
-		console.log('fireEvent()');
+		InputValidator.console.log('fireEvent()');
 		if (element.fireEvent) {
 			var evt = document.createEventObject();
 			element.fireEvent('on' + eventName, evt);
@@ -1425,7 +1416,7 @@ var InputValidator = {
 	},
 
 	_getOffset : function(element) {
-		// console.log('_getOffset()');
+		// InputValidator.console.log('_getOffset()');
 		var top = 0;
 		var left = 0;
 		while (element) {
@@ -1449,7 +1440,7 @@ var InputValidator = {
 	},
 
 	_getSize : function(element) {
-		// console.log('_getSize()');
+		// InputValidator.console.log('_getSize()');
 		var width = element.offsetWidth;
 		var height = element.offsetHeight;
 		return {
@@ -1459,7 +1450,7 @@ var InputValidator = {
 	},
 
 	_getGroupElements : function(srcElement) {
-		// console.log('_getGroupElements()');
+		// InputValidator.console.log('_getGroupElements()');
 		var formName = InputValidator._getAttributeValue(srcElement.form,
 				'name');
 		var eName = InputValidator._getAttributeValue(srcElement, 'name');
@@ -1490,7 +1481,7 @@ var InputValidator = {
 	},
 
 	getQueryString : function(form) {
-		console.log('getQueryString()');
+		InputValidator.console.log('getQueryString()');
 		var escaped_parts = [];
 		var elements = form.ecache.name;
 		var setParts = function(e) {
@@ -1526,7 +1517,7 @@ var InputValidator = {
 	},
 
 	setDefaultValue : function(srcElement) {
-		console.log('setDefaultValue()');
+		InputValidator.console.log('setDefaultValue()');
 		var setDefault = function(srcElement) {
 			if (srcElement.defaultValue !== undefined) {
 				srcElement.value = srcElement.defaultValue;
@@ -1548,7 +1539,7 @@ var InputValidator = {
 	},
 
 	getElementDefaultValue : function(element) {
-		console.log('getElementDefaultValue()');
+		InputValidator.console.log('getElementDefaultValue()');
 		var value = InputValidator.getValidateElementDefaultValue(element);
 		if (value instanceof Array) {
 			return value.join(',');
@@ -1558,7 +1549,7 @@ var InputValidator = {
 	},
 
 	getValidateElementDefaultValue : function(element) {
-		console.log('getValidateElementDefaultValue()');
+		InputValidator.console.log('getValidateElementDefaultValue()');
 		var values = [];
 		var isArray;
 		if (element.length > 1 && !element.tagName) {
@@ -1607,7 +1598,7 @@ var InputValidator = {
 	},
 
 	getElementValue : function(element) {
-		// console.log('getElementValue()');
+		// InputValidator.console.log('getElementValue()');
 		var value = InputValidator.getValidateElementValue(element);
 		if (value instanceof Array) {
 			return value.join(',');
@@ -1617,7 +1608,7 @@ var InputValidator = {
 	},
 
 	getValidateElementValue : function(element) {
-		// console.log('getValidateElementValue()');
+		// InputValidator.console.log('getValidateElementValue()');
 		var values = [];
 		var isArray;
 		if (element.length > 1 && !element.tagName) {
@@ -1663,13 +1654,25 @@ var InputValidator = {
 		} else {
 			return element.value
 		}
-	}
+	},
 
+	// TODO
+	console : {
+		log : function(message) {
+			// console.log(message);
+		},
+		show : function() {
+		},
+		hide : function() {
+		}
+	}
 };
+
 InputValidator.ElementCache = function() {
 	this.id = {};
 	this.name = {};
 };
+
 InputValidator.ElementCache.prototype = {
 	scan : function(form) {
 		var idList = [];
@@ -1710,12 +1713,15 @@ InputValidator.ElementCache.prototype = {
 		};
 	}
 };
+
 InputValidator.addEvent(window, 'load', function() {
 	InputValidator.setRulesAll();
 });
+
 InputValidator.addEvent(window, 'resize', function() {
 	InputValidator.resize();
 });
+
 if (!window.console) {
 	window.console = {
 		log : function(message) {

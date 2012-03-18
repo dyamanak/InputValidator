@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>オートコンプリートを設定する</title>
+<link type="text/css" rel="stylesheet" href="../SyntaxHighlighter.css" />
+<script type="text/javascript" src="../shCore.js"></script>
+<script type="text/javascript" src="../shBrushXml.js"></script>
+<script type="text/javascript" src="../shBrushJScript.js"></script>
+<script type="text/javascript">
+window.onload = function(){dp.SyntaxHighlighter.HighlightAll('code');}
+</script>
+<link type="text/css" rel="stylesheet" href="../common.css" />
+<script type="text/javascript" src="../inputvalidator.js"></script>
+<script type="text/javascript" src="../inputvalidator-rule.js"></script>
+<script type="text/javascript" src="../inputvalidator-plugin-suggest.js"></script>
+<script type="text/javascript">
+InputValidator.configure = {
+	form1 : {
+		lang : {
+			required : true,
+			datalist : 'langlist',
+			error : '好きな言語を入力してください。'
+		}
+	}
+};
+var list = [ 'Java', 'JavaScript', 'Perl', 'Ruby', 'PHP', 'Python', 'C',
+		'C++', '.NET', 'MySQL', 'Oracle', 'PostgreSQL' ];
+var list2 = [ 'りんご', 'みかん', 'メロン', 'パイナップル', 'マンゴー', '梨', '桃', 'スイカ',
+		'キウイ', '柿', 'ブドウ', 'ブルーベリー' ];
+var list3 = [ 'ウイスキー', 'ジン', 'ブランデー', 'ウオッカ', 'ラム', 'テキーラ', 'リキュール', 'ワイン',
+		'ビール', '日本酒', '焼酎' ];
+function startSuggest() {
+	new Suggest.Local(
+		'lang', // 入力のエレメントID
+		list // 補完候補の検索対象となる配列
+	);
+	new Suggest.Local(
+		'fruit', // 入力のエレメントID
+		list2 // 補完候補の検索対象となる配列
+	);
+	new Suggest.Local(
+		'drink', // 入力のエレメントID
+		list3 // 補完候補の検索対象となる配列
+	);
+}
+if (InputValidator.UserAgent.MSIE || InputValidator.UserAgent.AppleWebKit) {
+	InputValidator.addEvent(window, 'load', startSuggest);
+}
+</script>
+<style>
+.suggest {
+    position: absolute;
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCFF;
+    font-size: 90%;
+    width: 300px;
+}
+.suggest div {
+    display: block;
+    width: 300px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.suggest div.select{ /* キー上下で選択した場合のスタイル */
+    color: #FFFFFF;
+    background-color: #3366FF;
+}
+.suggest div.over{ /* マウスオーバ時のスタイル */
+    background-color: #99CCFF;
+}
+</style>
+</head>
+<body>
+
+<div class="pankuzu">
+<a href="../index.html">トップページ</a>
+／
+オートコンプリートを設定する
+</div>
+
+<div class="sourceCode">
+
+<h3>動作サンプル</h3>
+
+<div class="contentsBody">
+
+<form name="form1" method="post" action="">
+開発言語
+<input type="search" id="lang" name="lang" list="langlist" size="20" maxlength="20" /><br />
+<datalist id="langlist">
+<option value="C" />
+<option value="C++" />
+<option value="Objective C" />
+<option value="Java" />
+</datalist>
+<br />
+くだもの
+<input type="search" id="fruit" name="proglang" list="proglanglist" size="20" maxlength="20" /><br />
+<br />
+お酒
+<input type="search" id="drink" name="proglang" list="proglanglist" size="20" maxlength="20" /><br />
+<br />
+<input type="reset" value="リセット" />&nbsp;&nbsp;
+<input type="submit" value="送信" /><br />
+<br />
+</form>
+
+</div>
+
+</div>
+
+<br />
+
+<div class="sourceCode">
+
+<h3>ソースコード</h3>
+
+<br />
+
+<!--javascript source-->
+
+<h4>HEAD部（スクリプト宣言）</h4>
+
+<textarea name="code" class="javascript">
+&lt;script type="text/javascript" src="../inputvalidator.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="../inputvalidator-rule.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+InputValidator.configure = {
+	form1 : {
+		lang : {
+			required : true,
+			datalist : 'langlist',
+			error : '好きな言語を入力してください。'
+		}
+	}
+};
+var list = [ 'Java', 'JavaScript', 'Perl', 'Ruby', 'PHP', 'Python', 'C',
+		'C++', '.NET', 'MySQL', 'Oracle', 'PostgreSQL' ];
+var list2 = [ 'りんご', 'みかん', 'メロン', 'パイナップル', 'マンゴー', '梨', '桃', 'スイカ',
+		'キウイ', '柿', 'ブドウ', 'ブルーベリー' ];
+var list3 = [ 'ウイスキー', 'ジン', 'ブランデー', 'ウオッカ', 'ラム', 'テキーラ', 'リキュール', 'ワイン',
+		'ビール', '日本酒', '焼酎' ];
+function startSuggest() {
+	new Suggest.Local(
+		'lang', // 入力のエレメントID
+		list // 補完候補の検索対象となる配列
+	);
+	new Suggest.Local(
+		'fruit', // 入力のエレメントID
+		list2 // 補完候補の検索対象となる配列
+	);
+	new Suggest.Local(
+		'drink', // 入力のエレメントID
+		list3 // 補完候補の検索対象となる配列
+	);
+}
+if (InputValidator.UserAgent.MSIE || InputValidator.UserAgent.AppleWebKit) {
+	InputValidator.addEvent(window, 'load', startSuggest);
+}
+&lt;/script&gt;
+</textarea>
+
+<!--/javascript source-->
+
+<br />
+
+<!--html source-->
+
+<h4>BODY部（HTMLソース）</h4>
+<textarea name="code" class="xhtml">
+&lt;form name="form1" method="post" action=""&gt;
+開発言語
+&lt;input type="search" name="proglang" list="proglanglist" size="20" maxlength="20" /&gt;&lt;br /&gt;
+&lt;datalist id="proglanglist"&gt;
+&lt;option value="C" /&gt;
+&lt;option value="C++" /&gt;
+&lt;option value="Objective C" /&gt;
+&lt;option value="Java" /&gt;
+&lt;/datalist&gt;
+&lt;br /&gt;
+&lt;input type="reset" value="リセット" /&gt;&nbsp;&nbsp;
+&lt;input type="submit" value="送信" /&gt;&lt;br /&gt;
+&lt;br /&gt;
+&lt;/form&gt;
+</textarea>
+
+<!--html source-->
+
+</div>
+
+<br />
+
+<input type="button" value="戻る" onclick="history.back();" /><br />
+
+<br />
+
+</body>
+</html>

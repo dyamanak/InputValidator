@@ -108,7 +108,7 @@
 			<fileset dir="war" includes="inputvalidator-rule.js" />
 			<fileset dir="war/WEB-INF/lib" includes="inputvalidatorjava*.jar" />
 		</copy>
-		<zip destfile="war/download/inputvalidator-3.00-beta24.zip">
+		<zip destfile="war/download/inputvalidator-3.00-rc1.zip">
 			<fileset dir="deploy/deploy_zip" />
 		</zip>
 		<eclipse.refreshLocal resource="inputvalidator" depth="infinite" />

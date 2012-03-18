@@ -1,6 +1,44 @@
 /**
  * inputvalidator-rule.js
  */
+InputValidator.pluginRules = {
+	autofocus : function(element, rules) {
+		setTimeout(function(element) {
+			return function() {
+				element.focus();
+				InputValidator.fireEvent(element, 'mousedown');
+			};
+		}(element), 0);
+	},
+	readonly : function(element, rules) {
+		element.readOnly = true;
+		if (InputValidator.css.readonlyClass) {
+			element.className = InputValidator.css.readonlyClass;
+		}
+	},
+	hankaku : function(element, rules) {
+		element.style.imeMode = 'disabled';
+	},
+	zenkaku : function(element, rules) {
+		element.style.imeMode = 'active';
+	},
+	maxlength : function(element, rules) {
+		var maxlength;
+		if (typeof (rules.maxlength) == 'object') {
+			maxlength = parseInt(rules.maxlength.maxlength, 10);
+		} else {
+			maxlength = parseInt(rules.maxlength, 10);
+		}
+		element.maxLength = maxlength;
+	},
+	number : function(element, rules) {
+		element.style.imeMode = 'disabled';
+		if (!element.style.textAlign) {
+			element.style.textAlign = 'right';
+		}
+	}
+};
+
 InputValidator.validationRules = {
 	placeholder : function(value, rules) {
 		return true;
@@ -9,12 +47,6 @@ InputValidator.validationRules = {
 		return true;
 	},
 	error : function(value, rules) {
-		return true;
-	},
-	readonly : function(value, rules) {
-		return true;
-	},
-	autofocus : function(value, rules) {
 		return true;
 	},
 	errorfor : function(value, rules) {
@@ -65,7 +97,7 @@ InputValidator.validationRules = {
 		var isValid = true;
 		var errorMessage = '';
 		if (value) {
-			if (!/\w+@\w+\.\w+/.test(value)) {
+			if (!/^[^@]+@[^@]+\.[^@]+$/.test(value)) {
 				isValid = false;
 				if (typeof (rules) == 'object') {
 					errorMessage = rules.error;
@@ -116,7 +148,7 @@ InputValidator.validationRules = {
 		var isValid = true;
 		var errorMessage = '';
 		if (value) {
-			if (value.match(/[^0-9,\\.]/)) {
+			if (!value.match(/^[+\\-]?[0-9,\\.]+$/)) {
 				isValid = false;
 				if (typeof (rules) == 'object') {
 					errorMessage = rules.error;
@@ -466,7 +498,7 @@ InputValidator.parseDate = function(dateString, format) {
 	// mList = ['-','yyyy','年','M','月','d','日-']
 	var targetDate = dateString;
 	var targetFormat = format;
-	var dateRegex = new RegExp(/yyyy|yy|MM|M|dd|d/);
+	var dateRegex = new RegExp(/yyyy|yy|mm|m|dd|d/i);
 	var mList = [];
 	var m;
 	while (m = dateRegex.exec(targetFormat)) {
@@ -486,7 +518,7 @@ InputValidator.parseDate = function(dateString, format) {
 	var getValue = function(re) {
 		var val = re.exec(targetDate);
 		if (val) {
-			targetDate = targetDate.substring(val.index + val[0].length);
+			targetDate = targetDate.replace(re, '');
 			return parseInt(val, 10);
 		} else {
 			return 0;
@@ -494,27 +526,20 @@ InputValidator.parseDate = function(dateString, format) {
 	}
 	for ( var i = 0, len = mList.length; i < len; i++) {
 		var m = mList[i];
-		switch (m) {
-		case 'yyyy':
+		if (m === 'YYYY' || m === 'yyyy') {
 			year = getValue(/[0-9]{1,4}/);
-			break;
-		case 'yy':
+		} else if (m === 'YY' || m === 'yy') {
 			year = getValue(/[0-9]{1,2}/)
 					+ (Math.floor(nowDate.getFullYear() / 100) * 100);
-			break;
-		case 'MM':
+		} else if (m === 'MM' || m === 'mm') {
 			month = getValue(/[0|1][0-9]/);
-			break;
-		case 'M':
+		} else if (m === 'M' || m === 'm') {
 			month = getValue(/[0|1]?[0-9]/);
-			break;
-		case 'dd':
+		} else if (m === 'DD' || m === 'dd') {
 			day = getValue(/[0-3][0-9]/);
-			break;
-		case 'd':
+		} else if (m === 'D' || m === 'd') {
 			day = getValue(/[0-3]?[0-9]/);
-			break;
-		default:
+		} else {
 			if (targetDate.indexOf(m) != 0) {
 				year = month = day = 0;
 				break;
@@ -549,12 +574,19 @@ InputValidator.validateRule = function(value, rules) {
 				alert('[' + ruleKey + ']の戻り値が不正です。\nプログラムを修正してください。');
 			}
 		} else {
-			alert('[' + ruleKey + ']というチェックルールはありません。\n要素名[' + this.name
-					+ ']のチェックルールを修正してください。');
+			if (InputValidator.pluginRules[ruleKey]) {
+				// プラグインの場合、validateRule は省略可能。
+			} else {
+				alert('[' + ruleKey + ']というチェックルールはありません。\n要素名[' + this.name
+						+ ']のチェックルールを修正してください。');
+			}
 		}
 		if (!isValid) {
 			break;
 		}
+	}
+	if (!isValid && !errorMessage && rules.error) {
+		errorMessage = rules.error;
 	}
 	return {
 		isValid : isValid,

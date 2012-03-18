@@ -4,24 +4,27 @@ import java.util.List;
 
 import jp.co.cosmoroot.inputvalidator.ErrorElement;
 import jp.co.cosmoroot.inputvalidator.InputValidatorJava;
+import junit.framework.TestCase;
 
-public class Main {
+public class dateTest extends TestCase {
 
-	/**
-	 * @param args
-	 * @throws Exception
-	 */
-	public static void main(String[] args) throws Exception {
-		System.out.println("start");
+	public void testValidateBean() {
 
-		TestBean bean = new TestBean();
-		bean.setName("１２３４５６７８９０1");
-		bean.setZipcode("12345637");
-		bean.setAge("38");
-		bean.setEmail("aaaa@bbbb.com");
-		bean.setHobby(new String[] { "テニス", "ドライブ" });
+		TestBean bean;
+		List list;
 
-		InputValidatorJava validator = new InputValidatorJava();
+		/**
+		 * test date
+		 */
+		bean = new TestBean();
+		bean.setDate2("2012/03/17");
+		list = validate(bean);
+		assertEquals(1, list.size());
+
+	}
+
+	private List validate(TestBean bean) {
+		InputValidatorJava validator = new InputValidatorJava(true);
 		// validator.loadRuleScript("inputvalidator-rule.js", "UTF-8");
 		List list = validator.validateBean(bean, "form1", "validation_conf.js",
 				"UTF-8");
@@ -30,7 +33,7 @@ public class Main {
 			System.out.println(element.getName() + ":"
 					+ element.getErrorMessage());
 		}
-		System.out.println("end");
+		return list;
 	}
 
 }

@@ -39,6 +39,12 @@ InputValidator.pluginRules = {
 	}
 };
 
+InputValidator.formatterRules = {
+	date : function(element, rules) {
+		InputValidator.formatDateElement(element, rules);
+	}
+};
+
 InputValidator.validationRules = {
 	placeholder : function(value, rules) {
 		return true;
@@ -579,8 +585,12 @@ InputValidator.validateRule = function(value, rules) {
 				alert('[' + ruleKey + ']の戻り値が不正です。\nプログラムを修正してください。');
 			}
 		} else {
-			if (InputValidator.pluginRules[ruleKey]) {
+			if (InputValidator.pluginRules
+					&& InputValidator.pluginRules[ruleKey]) {
 				// プラグインの場合、validateRule は省略可能。
+			} else if (InputValidator.formatterRules
+					&& InputValidator.formatterRules[ruleKey]) {
+				// フォーマッターの場合、validateRule は省略可能。
 			} else {
 				alert('[' + ruleKey + ']というチェックルールはありません。\n要素名[' + this.name
 						+ ']のチェックルールを修正してください。');

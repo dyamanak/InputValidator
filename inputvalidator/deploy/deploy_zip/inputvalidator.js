@@ -297,7 +297,6 @@ var InputValidator = {
 		}
 	},
 
-	// TODO
 	pluginRule : function(value, rules) {
 		var isValid = true;
 		var errorMessage = null;
@@ -753,8 +752,16 @@ var InputValidator = {
 		}
 		srcElement.className = srcElement._defaultClassName;
 
-		// 入力値をフォーマットする（フォーマットが指定されている場合のみ）
-		InputValidator.formatDateElement(srcElement);
+		// 入力値をフォーマット（補正）する
+		var rules = srcElement._rules;
+		var formatterRules = InputValidator.formatterRules;
+		if (rules && formatterRules) {
+			for ( var formatterRule in formatterRules) {
+				if (rules[formatterRule]) {
+					formatterRules[formatterRule].call(this, srcElement, rules);
+				}
+			}
+		}
 
 		// 変更前の入力値と比較し、異なっていたら、_changeValueメソッドを呼ぶ
 		InputValidator._checkChangeValue(srcElement);
@@ -800,12 +807,8 @@ var InputValidator = {
 		return true;
 	},
 
-	formatDateElement : function(srcElement) {
+	formatDateElement : function(srcElement, rules) {
 		InputValidator.console.log('formatDateElement()');
-		var rules = srcElement._rules;
-		if (!rules) {
-			return;
-		}
 		var value = InputValidator.getElementValue(srcElement);
 		if (!value) {
 			return;
